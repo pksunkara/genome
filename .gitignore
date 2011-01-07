@@ -1,0 +1,5 @@
+*.o
+*.out
+genome
+lex.yy.*
+y.tab.*
