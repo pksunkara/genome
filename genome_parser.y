@@ -48,14 +48,14 @@
 %token TTC // Start block
 %token TTG // Stop block
 
-%token TCA // Jump unconditionally to after {
-%token TCT // Jump on top item zero to after {
-%token TCC // Jump on nth item zero to after {
-%token TCG // Jump on bottom item zero after {
-%token TGA // Jump unconditionally to after }
-%token TGT // Jump on top item zero to after }
-%token TGC // Jump on nth item zero to after }
-%token TGG // Jump on bottom item zero to after }
+%token TCA // Jump unconditionally to start of the block
+%token TCT // Jump on top item zero to start of the block
+%token TCC // Jump on nth item zero to start of the block
+%token TCG // Jump on bottom item zero to start of the block
+%token TGA // Jump unconditionally to end of the bkock
+%token TGT // Jump on top item zero to end of the bkock
+%token TGC // Jump on nth item zero to end of the bkock
+%token TGG // Jump on bottom item zero to end of the bkock
 
 %token CAA // Print the whole stack
 %token CAT // Print top n items of stack
