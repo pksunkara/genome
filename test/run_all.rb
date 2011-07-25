@@ -2,9 +2,9 @@
 
 load 'test/test.rb'
 
-suite = TestSuite.new(File.expand_path('genome'), 'test/')
+suite = TestSuite.new(File.expand_path('genome'))
 
-Dir.glob('t-*').each do |testdir|
+Dir.glob('test/t-*').each do |testdir|
   suite.run(testdir)
 end
 
