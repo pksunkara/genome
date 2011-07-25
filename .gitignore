@@ -1,6 +1,5 @@
+genome
 *.o
 *.out
-bin/
-obj/
 lex.yy.*
 y.tab.*

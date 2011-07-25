@@ -1,31 +1,27 @@
-BIN= ./bin/
-OBJ= ./obj/
-SRC= ./src/
-
 prefix= /usr/bin
 INSTALL= install
 CC= gcc
 CFLAGS= -Wall -pedantic -g
 
-all: $(BIN)genome
+all: genome
 
-$(BIN)genome: $(OBJ)lex.yy.o $(OBJ)y.tab.o $(SRC)genome.c
+genome: lex.yy.o y.tab.o genome.c
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(OBJ)lex.yy.o: lex.yy.c y.tab.c
+lex.yy.o: lex.yy.c y.tab.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ)y.tab.o: y.tab.c
+y.tab.o: y.tab.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
-lex.yy.c: $(SRC)genome_lex.l
+lex.yy.c: genome_lex.l
 	lex $^
 
-y.tab.c: $(SRC)genome_parser.y
+y.tab.c: genome_parser.y
 	yacc -d $^
 
 install: 
-	$(INSTALL) $(BIN)genome $(prefix)/genome
+	$(INSTALL) genome $(prefix)/genome
 
 clean:
-	rm $(BIN)* $(OBJ)* y.tab.* lex.yy.*
+	rm *.o y.tab.* lex.yy.*
