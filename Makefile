@@ -1,6 +1,7 @@
 prefix= /usr/bin
 
 RUBY= ruby
+TEST_SCRIPT= test/run_all.rb
 
 INSTALL= install
 CC= gcc
@@ -24,11 +25,11 @@ lex.yy.c: analyzer.l
 y.tab.c: parser.y
 	yacc -d $^
 
-install: 
+install: genome
 	$(INSTALL) genome $(prefix)/genome
 
-check:
-	$(RUBY) test/run_all.rb
+check: $(TEST_SCRIPT) genome
+	$(RUBY) $<
 
 clean:
 	$(RM) *.o
