@@ -2,10 +2,10 @@
 
 load 'test/test.rb'
 
-suite = TestSuite.new(File.expand_path('genome'))
+suite = TestSuite.new(File.expand_path('genome'), 'test/')
 
-Dir.glob('test/t-*').each do |testdir|
-  suite.run(testdir)
+Dir.glob('test/t-*').count.times do |i|
+  suite.run(i+1)
 end
 
 suite.statsput
