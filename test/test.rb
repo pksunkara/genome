@@ -44,12 +44,12 @@ class TestSuite
       diff = "> NO TESTCASE"
     end
 
-    print "#{testdir}\t"
+    print "#{testdir} "
     if diff.empty?
-      puts "PASS".pass
+      puts "[PASS]".pass
       @stats['pass'] += 1
     else
-      puts "FAIL".fail
+      puts "[FAIL]".fail
       @stats['fail'] += 1
       diff.diffput
     end
