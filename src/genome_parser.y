@@ -16,6 +16,24 @@
 	void count(void);
 	void yyerror(char* msg);
 
+	extern void clear_stack(void);
+	extern void slide(int);
+	extern void push_number_into_stack(int);
+	extern void pop_number(void);
+	extern void pop_numbers_from_stack(int, int);
+	extern void dup_stack(void);
+	extern void dup_stack_n(int, int);
+	extern void copy_nth(int, int);
+	extern void arith(int);
+	extern void crement(int, int);
+	extern void print_whole_stack(int);
+	extern void print_stack_n(int, int, int);
+	extern void reverse_whole(void);
+	extern void reverse_stack_n(int, int);
+	extern void move_top(void);
+	extern void move(int, int);
+	extern void read_top(void);
+	extern void read_n(int, int);
 %}
 
 %token AAA // Duplicate the whole stack 
@@ -176,11 +194,11 @@ hex: 	GAA { $$=0; }
 	;
 
 start: TTC {
-		//Start block
+		/* Start block */
 	};
 
 stop: TTG {
-		//End block
+		/* End block */
 	};
 
 %%

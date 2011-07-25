@@ -9,6 +9,7 @@ extern char* yytext;
 
 extern int yyparse(void);
 extern int yywrap(void);
+extern void yyerror(char *);
 
 typedef struct node {
 	int v;
@@ -80,7 +81,7 @@ void pop_number(void) {
 
 void pop_numbers_from_stack(int f, int n) {
 	int i;
-	gnode tmp, buf;
+	gnode tmp;
 	for(i=0;i<n;i++) {
 		if(tmp==NULL)
 			break;
