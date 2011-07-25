@@ -1,4 +1,7 @@
 prefix= /usr/bin
+
+RUBY= ruby
+
 INSTALL= install
 CC= gcc
 CFLAGS= -Wall -pedantic -g
@@ -15,14 +18,17 @@ lex.yy.o: lex.yy.c y.tab.c
 y.tab.o: y.tab.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
-lex.yy.c: genome_lex.l
+lex.yy.c: analyzer.l
 	lex $^
 
-y.tab.c: genome_parser.y
+y.tab.c: parser.y
 	yacc -d $^
 
 install: 
 	$(INSTALL) genome $(prefix)/genome
+
+test:
+	$(RUBY) test/run_all.rb
 
 clean:
 	$(RM) *.o

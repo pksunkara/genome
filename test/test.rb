@@ -1,12 +1,16 @@
 # Ruby test suite for testing genome
 
 class String
+  def code(code)
+    "\033[#{code.to_s}m#{self}\033[0m"
+  end
+
   def pass
-    "\033#{self}"
+    self.code(32)
   end
 
   def fail
-    "\033#{self}"
+    self.code(31)
   end
 
   def diff
