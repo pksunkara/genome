@@ -3,3 +3,4 @@ genome
 *.out
 lex.yy.*
 y.tab.*
+test/*/output

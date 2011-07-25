@@ -13,31 +13,52 @@ class String
     self.code(31)
   end
 
-  def diff
+  def diffput
+    puts "\tDiff:"
     self.split("\n").each do |line|
       if line[0]=='>'
-        line
-      elseif line[0]=='<'
-        line
+        puts "\t\t+ #{line[2..-1]}".pass
+      elsif line[0]=='<'
+        puts "\t\t- #{line[2..-1]}".fail
+      else
+        puts "\t\t#{line}"
       end
     end
   end
 end
 
 class TestSuite
-  def initalize(command)
+  def initialize(command)
     @command = command
+    @stats = {'pass' => 0, 'fail' => 0, 'time' => 0}
   end
 
-  def run(test_number)
-    testdir = "t-" << test_number.to_s.rjust(4,'0')
-    `#{@command} #{testdir}/program > #{testdir/output}`
-    @diff = `diff #{testdir}/answer #{testdir}/output`
-    if @diff.empty?
+  def run(testcase)
+    start_time = Time.now.to_i
+    testdir = (testcase.is_a?(String) ? testcase : "t-#{testcase.to_s.rjust(3,'0')}")
+
+    if Dir.exist?(testdir) && File.exist?("#{testdir}/program")
+      `#{@command} #{testdir}/program > #{testdir}/output`
+      diff = `diff #{testdir}/answer #{testdir}/output`
+    else
+      diff = "> NO TESTCASE"
+    end
+
+    print "#{testdir}\t"
+    if diff.empty?
       puts "PASS".pass
+      @stats['pass'] += 1
     else
       puts "FAIL".fail
-      puts @diff.diff
+      @stats['fail'] += 1
+      diff.diffput
     end
+
+    end_time = Time.now.to_i
+    @stats['time'] += (end_time - start_time)
+  end
+
+  def statsput
+    puts "\nFinished in #{@stats['time']} seconds.\n#{@stats['pass'] + @stats['fail']} tests. " << "#{@stats['pass']} passes".pass << ", " << "#{@stats['fail']} failures".fail << "."
   end
 end

@@ -27,7 +27,7 @@ y.tab.c: parser.y
 install: 
 	$(INSTALL) genome $(prefix)/genome
 
-test:
+check:
 	$(RUBY) test/run_all.rb
 
 clean:
