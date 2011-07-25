@@ -32,6 +32,7 @@ class TestSuite
     @command = command
     @stats = {'pass' => 0, 'fail' => 0, 'time' => 0}
     @prefix = prefix
+    puts ''
   end
 
   def run(testcase)
