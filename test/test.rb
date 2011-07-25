@@ -28,18 +28,19 @@ class String
 end
 
 class TestSuite
-  def initialize(command)
+  def initialize(command, prefix = '')
     @command = command
     @stats = {'pass' => 0, 'fail' => 0, 'time' => 0}
+    @prefix = prefix
   end
 
   def run(testcase)
     start_time = Time.now.to_i
     testdir = (testcase.is_a?(String) ? testcase : "t-#{testcase.to_s.rjust(3,'0')}")
 
-    if Dir.exist?(testdir) && File.exist?("#{testdir}/program")
-      `#{@command} #{testdir}/program > #{testdir}/output`
-      diff = `diff #{testdir}/answer #{testdir}/output`
+    if Dir.exist?("#{@prefix}#{testdir}") && File.exist?("#{@prefix}#{testdir}/program") && File.exist?("#{@prefix}#{testdir}/answer")
+      `#{@command} #{@prefix}#{testdir}/program > #{@prefix}#{testdir}/output`
+      diff = `diff #{@prefix}#{testdir}/answer #{@prefix}#{testdir}/output`
     else
       diff = "> NO TESTCASE"
     end
