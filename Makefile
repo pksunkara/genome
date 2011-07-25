@@ -2,6 +2,7 @@ prefix= /usr/bin
 INSTALL= install
 CC= gcc
 CFLAGS= -Wall -pedantic -g
+RM= rm -rf
 
 all: genome
 
@@ -24,4 +25,5 @@ install:
 	$(INSTALL) genome $(prefix)/genome
 
 clean:
-	rm *.o y.tab.* lex.yy.*
+	$(RM) *.o
+	$(RM) y.tab.* lex.yy.* genome
