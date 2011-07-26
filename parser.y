@@ -162,7 +162,7 @@ stmt:	block
 	| CGT { move(1,1); }
 	| CGT number { move(1,$2); }
 	| CGC { move(0,1); }
-	| CGC number { move(1,$2); }
+	| CGC number { move(0,$2); }
 	;
 
 number: hex { $$=$1; }
