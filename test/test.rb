@@ -39,9 +39,9 @@ class TestSuite
     start_time = Time.now.to_i
     testdir = (testcase.is_a?(String) ? testcase : "t-#{testcase.to_s.rjust(3,'0')}")
 
-    if Dir.exist?("#{@prefix}#{testdir}") && File.exist?("#{@prefix}#{testdir}/program") && File.exist?("#{@prefix}#{testdir}/answer")
+    if Dir.exist?("#{@prefix}#{testdir}") && File.exist?("#{@prefix}#{testdir}/program")
       `#{@command} #{@prefix}#{testdir}/program > #{@prefix}#{testdir}/output`
-      diff = `diff #{@prefix}#{testdir}/answer #{@prefix}#{testdir}/output`
+      diff = `diff --unidirectional-new-file #{@prefix}#{testdir}/answer #{@prefix}#{testdir}/output`
     else
       diff = "> NO TESTCASE"
     end
