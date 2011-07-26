@@ -1,0 +1,13 @@
+{Copy top nth item on the stack}
+TTC
+  ATA GTA GAT
+  ATA GTT GAG
+  ATA GTA GAG
+  ATA GTA GCT
+  AAC
+  ATA GAA GCC
+  CTA
+  ACT GTT
+  ATA GAA GCC
+  CTA
+TTG CGG
