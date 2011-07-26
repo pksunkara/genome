@@ -1,0 +1,18 @@
+{Move up the stack by n (If nothing, n=1)}
+TTC
+  ATA GTA GAT
+  ATA GTT GAG
+  ATA GTA GAG
+  ATA GTA GCT
+  AAC
+  ATA GAA GCC
+  CTA
+  CGT GTT
+  CTC
+  CGC
+  CTC
+  CGC GAG
+  CTC
+  CGC
+  CTC
+TTG CGG
