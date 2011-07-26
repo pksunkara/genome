@@ -20,7 +20,7 @@ class String
         puts "\t\t+ #{line[2..-1]}".pass
       elsif line[0]=='<'
         puts "\t\t- #{line[2..-1]}".fail
-      else
+      elsif line[0]!='-'
         puts "\t\t#{line}"
       end
     end
