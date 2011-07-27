@@ -40,7 +40,11 @@ class TestSuite
     testdir = (testcase.is_a?(String) ? testcase : "t-#{testcase.to_s.rjust(3,'0')}")
 
     if Dir.exist?("#{@prefix}#{testdir}") && File.exist?("#{@prefix}#{testdir}/program")
-      `#{@command} #{@prefix}#{testdir}/program > #{@prefix}#{testdir}/output`
+      if File.exist?("#{@prefix}#{testdir}/input")
+        `#{@command} #{@prefix}#{testdir}/program < #{@prefix}#{testdir}/input > #{@prefix}#{testdir}/output`
+      else
+        `#{@command} #{@prefix}#{testdir}/program > #{@prefix}#{testdir}/output`
+      end
       diff = `diff --unidirectional-new-file #{@prefix}#{testdir}/answer #{@prefix}#{testdir}/output`
     else
       diff = "> NO TESTCASE"
