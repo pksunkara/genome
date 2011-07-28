@@ -28,24 +28,29 @@ class String
 end
 
 class TestSuite
-  def initialize(command, prefix = '')
+  def initialize(command, options = {})
     @command = command
     @stats = {'pass' => 0, 'fail' => 0, 'time' => 0}
-    @prefix = prefix
+    @options = {
+      'prefix' => '',
+      'rjust' => 3,
+      'program' => 'program',
+      'input' => 'input',
+      'answer' => 'answer'
+    }
+    @options = @options.merge(options)
+    puts @options
     puts ''
   end
 
   def run(testcase)
-    start_time = Time.now.to_i
-    testdir = (testcase.is_a?(String) ? testcase : "t-#{testcase.to_s.rjust(3,'0')}")
+    start_time = Time.now
+    testdir = (testcase.is_a?(String) ? testcase : "t-#{testcase.to_s.rjust(@options['rjust'],'0')}")
 
-    if Dir.exist?("#{@prefix}#{testdir}") && File.exist?("#{@prefix}#{testdir}/program")
-      if File.exist?("#{@prefix}#{testdir}/input")
-        `#{@command} #{@prefix}#{testdir}/program < #{@prefix}#{testdir}/input > #{@prefix}#{testdir}/output`
-      else
-        `#{@command} #{@prefix}#{testdir}/program > #{@prefix}#{testdir}/output`
-      end
-      diff = `diff --unidirectional-new-file #{@prefix}#{testdir}/answer #{@prefix}#{testdir}/output`
+    if Dir.exist?("#{@options['prefix']}#{testdir}") && File.exist?("#{@options['prefix']}#{testdir}/#{@options['program']}")
+      @input = File.exist?("#{@options['prefix']}#{testdir}/#{@options['input']}") ? " < #{@options['prefix']}#{testdir}/#{@options['input']}" : ""
+      `#{@command} #{@options['prefix']}#{testdir}/#{@options['program']}#{@input} > #{@options['prefix']}#{testdir}/output`
+      diff = `diff --unidirectional-new-file #{@options['prefix']}#{testdir}/#{@options['answer']} #{@options['prefix']}#{testdir}/output`
     else
       diff = "> NO TESTCASE"
     end
@@ -60,11 +65,11 @@ class TestSuite
       diff.diffput
     end
 
-    end_time = Time.now.to_i
+    end_time = Time.now
     @stats['time'] += (end_time - start_time)
   end
 
   def statsput
-    puts "\nFinished in #{@stats['time']} seconds.\n#{@stats['pass'] + @stats['fail']} tests. " << "#{@stats['pass']} passes".pass << ", " << "#{@stats['fail']} failures".fail << "."
+    puts "\nFinished in #{@stats['time'].round(6)} seconds.\n#{@stats['pass'] + @stats['fail']} tests. " << "#{@stats['pass']} passes".pass << ", " << "#{@stats['fail']} failures".fail << "."
   end
 end

@@ -2,7 +2,7 @@
 
 load 'test/test.rb'
 
-suite = TestSuite.new(File.expand_path('genome'), 'test/')
+suite = TestSuite.new(File.expand_path('genome'), { 'prefix' => 'test/' })
 
 Dir.glob('test/t-*').count.times do |i|
   suite.run(i+1)
