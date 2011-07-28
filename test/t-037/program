@@ -1,0 +1,14 @@
+{Read input to n given by top item of stack}
+TTC
+  ATA GTA GAT
+  ATA GTT GAG
+  ATA GTA GAG
+  ATA GTA GCT
+  AAC
+  ATA GAA GCC
+  CTA
+  ATA GAG
+  CCA
+  ATC
+  CTA
+TTG CGG

@@ -16,6 +16,24 @@
 	void count(void);
 	void yyerror(char* msg);
 
+	extern void clear_stack(void);
+	extern void slide(int);
+	extern void push_number_into_stack(int);
+	extern void pop_number(void);
+	extern void pop_numbers_from_stack(int, int);
+	extern void dup_stack(void);
+	extern void dup_stack_n(int, int);
+	extern void copy_nth(int, int);
+	extern void arith(int);
+	extern void crement(int, int);
+	extern void print_whole_stack(int);
+	extern void print_stack_n(int, int, int);
+	extern void reverse_whole(void);
+	extern void reverse_stack_n(int, int);
+	extern void move_top(void);
+	extern void move(int, int);
+	extern void read_top(void);
+	extern void read_n(int, int);
 %}
 
 %token AAA // Duplicate the whole stack 
@@ -48,14 +66,14 @@
 %token TTC // Start block
 %token TTG // Stop block
 
-%token TCA // Jump unconditionally to after {
-%token TCT // Jump on top item zero to after {
-%token TCC // Jump on nth item zero to after {
-%token TCG // Jump on bottom item zero after {
-%token TGA // Jump unconditionally to after }
-%token TGT // Jump on top item zero to after }
-%token TGC // Jump on nth item zero to after }
-%token TGG // Jump on bottom item zero to after }
+%token TCA // Jump unconditionally to start of the block
+%token TCT // Jump on top item zero to start of the block
+%token TCC // Jump on nth item zero to start of the block
+%token TCG // Jump on bottom item zero to start of the block
+%token TGA // Jump unconditionally to end of the bkock
+%token TGT // Jump on top item zero to end of the bkock
+%token TGC // Jump on nth item zero to end of the bkock
+%token TGG // Jump on bottom item zero to end of the bkock
 
 %token CAA // Print the whole stack
 %token CAT // Print top n items of stack
@@ -144,7 +162,7 @@ stmt:	block
 	| CGT { move(1,1); }
 	| CGT number { move(1,$2); }
 	| CGC { move(0,1); }
-	| CGC number { move(1,$2); }
+	| CGC number { move(0,$2); }
 	;
 
 number: hex { $$=$1; }
@@ -176,11 +194,11 @@ hex: 	GAA { $$=0; }
 	;
 
 start: TTC {
-		//Start block
+		/* Start block */
 	};
 
 stop: TTG {
-		//End block
+		/* End block */
 	};
 
 %%

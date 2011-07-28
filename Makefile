@@ -1,15 +1,36 @@
-all: exe
+prefix= /usr/bin
 
-exe: yacc lex genome.c
-	gcc -g lex.yy.o y.tab.o genome.c -o genome
+RUBY= ruby
+TEST_SCRIPT= test/run_all.rb
 
-lex: genome_lex.l
-	lex genome_lex.l
-	gcc -g -c lex.yy.c
+INSTALL= install
+CC= gcc
+CFLAGS= -Wall -pedantic -g
+RM= rm -rf
 
-yacc: genome_parser.y
-	yacc -d genome_parser.y
-	gcc -g -c y.tab.c
+all: genome
+
+genome: lex.yy.o y.tab.o genome.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+lex.yy.o: lex.yy.c y.tab.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+y.tab.o: y.tab.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+lex.yy.c: analyzer.l
+	lex $^
+
+y.tab.c: parser.y
+	yacc -d $^
+
+install: genome
+	$(INSTALL) genome $(prefix)/genome
+
+check: $(TEST_SCRIPT) genome
+	$(RUBY) $<
 
 clean:
-	rm -f y.tab.* lex.yy.* genome *.out *.o
+	$(RM) *.o
+	$(RM) y.tab.* lex.yy.* genome

@@ -2,6 +2,7 @@
 	#include "y.tab.h"
 	
 	extern void count(void);
+	extern void yyerror(char *);
 %}
 
 %%
