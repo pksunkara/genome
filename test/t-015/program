@@ -1,0 +1,12 @@
+{Pop bottom n items from stack}
+TTC
+  ATA GTA GAT
+  ATA GTT GAG
+  ATA GTA GAG
+  ATA GTA GCT
+  AAC
+  ATA GAA GCC
+  CTA
+  ATG GAC
+  CTA
+TTG CGG

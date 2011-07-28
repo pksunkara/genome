@@ -1,0 +1,23 @@
+{Pushing numbers & Printing in non-ascii}
+TTC
+  ATA GAA
+  ATA GAT
+  ATA GAC
+  ATA GAG
+  ATA GTA
+  ATA GTT
+  ATA GTC
+  ATA GTG
+  ATA GCA
+  ATA GCT
+  ATA GCC
+  ATA GCG
+  ATA GGA
+  ATA GGT
+  ATA GGC
+  ATA GGG
+  CAA {Printing whole stack in non-ascii}
+  ACA
+  ATA GAA GCC
+  CTA
+TTG CGG

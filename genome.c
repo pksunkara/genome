@@ -9,6 +9,7 @@ extern char* yytext;
 
 extern int yyparse(void);
 extern int yywrap(void);
+extern void yyerror(char *);
 
 typedef struct node {
 	int v;
@@ -80,7 +81,7 @@ void pop_number(void) {
 
 void pop_numbers_from_stack(int f, int n) {
 	int i;
-	gnode tmp, buf;
+	gnode tmp;
 	for(i=0;i<n;i++) {
 		if(tmp==NULL)
 			break;
@@ -275,8 +276,10 @@ void move(int f, int n) {
 }
 
 void read_n(int f, int n) {
-	int i;
+	int i, in;
 	gnode tmp;
+	if(head==NULL)
+		push_number_into_stack(32);
 	tmp=(f==1)?head:tail;
 	for(i=1;i<n;i++) {
 		if(tmp==NULL)
@@ -284,14 +287,15 @@ void read_n(int f, int n) {
 		tmp=(f==1)?tmp->next:tmp->prev;
 	}
 	if(tmp!=NULL) {
-		scanf("%d",&(tmp->v));
+		scanf("%c",&in);
+		tmp->v = in;
 	} else
 		yyerror("Number of elements in the stack is less than the required number");
 	return;
 }
 
 void read_top(void) {
-	read_n(1,head->v);
+	read_n(1,head->v+1);
 	return;
 }
 
