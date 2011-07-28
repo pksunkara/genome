@@ -36,7 +36,8 @@ class TestSuite
       'rjust' => 3,
       'program' => 'program',
       'input' => 'input',
-      'answer' => 'answer'
+      'answer' => 'answer',
+      'test_prefix' => 't-'
     }
     @options = @options.merge(options)
     puts @options
@@ -45,12 +46,13 @@ class TestSuite
 
   def run(testcase)
     start_time = Time.now
-    testdir = (testcase.is_a?(String) ? testcase : "t-#{testcase.to_s.rjust(@options['rjust'],'0')}")
+    testdir = (testcase.is_a?(String) ? testcase : @options['test_prefix'] + testcase.to_s.rjust(@options['rjust'],'0'))
+    testcase = @options['prefix'] + testdir
 
-    if Dir.exist?("#{@options['prefix']}#{testdir}") && File.exist?("#{@options['prefix']}#{testdir}/#{@options['program']}")
-      @input = File.exist?("#{@options['prefix']}#{testdir}/#{@options['input']}") ? " < #{@options['prefix']}#{testdir}/#{@options['input']}" : ""
-      `#{@command} #{@options['prefix']}#{testdir}/#{@options['program']}#{@input} > #{@options['prefix']}#{testdir}/output`
-      diff = `diff --unidirectional-new-file #{@options['prefix']}#{testdir}/#{@options['answer']} #{@options['prefix']}#{testdir}/output`
+    if Dir.exist?(testcase) && File.exist?("#{testcase}/#{@options['program']}")
+      @input = File.exist?("#{testcase}/#{@options['input']}") ? " < #{testcase}/#{@options['input']}" : ""
+      `#{@command} #{testcase}/#{@options['program']}#{@input} > #{testcase}/output`
+      diff = `diff -N #{testcase}/#{@options['answer']} #{testcase}/output`
     else
       diff = "> NO TESTCASE"
     end
@@ -70,6 +72,10 @@ class TestSuite
   end
 
   def statsput
-    puts "\nFinished in #{@stats['time'].round(6)} seconds.\n#{@stats['pass'] + @stats['fail']} tests. " << "#{@stats['pass']} passes".pass << ", " << "#{@stats['fail']} failures".fail << "."
+    puts ""
+    puts "Finished in #{@stats['time'].round(6)} seconds."
+    print "#{@stats['pass'] + @stats['fail']} tests. "
+    print "#{@stats['pass']} passes".pass << ", "
+    puts "#{@stats['fail']} failures".fail << "."
   end
 end
