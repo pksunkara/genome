@@ -40,17 +40,21 @@ class TestSuite
       'test_prefix' => 't-'
     }
     @options = @options.merge(options)
-    puts @options
     puts ''
   end
 
   def run(testcase)
     start_time = Time.now
-    testdir = (testcase.is_a?(String) ? testcase : @options['test_prefix'] + testcase.to_s.rjust(@options['rjust'],'0'))
+    testcase_pad = testcase.to_s.rjust(@options['rjust'],'0')
+    testdir = (testcase.is_a?(String) ? testcase : @options['test_prefix'] + testcase_pad)
     testcase = @options['prefix'] + testdir
 
     if Dir.exist?(testcase) && File.exist?("#{testcase}/#{@options['program']}")
-      @input = File.exist?("#{testcase}/#{@options['input']}") ? " < #{testcase}/#{@options['input']}" : ""
+      if File.exist?("#{testcase}/#{@options['input']}")
+        @input = " < #{testcase}/#{@options['input']}"
+      else
+        @input = ""
+      end
       `#{@command} #{testcase}/#{@options['program']}#{@input} > #{testcase}/output`
       diff = `diff -N #{testcase}/#{@options['answer']} #{testcase}/output`
     else

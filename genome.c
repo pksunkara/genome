@@ -243,12 +243,57 @@ void print_stack_n(int f, int a, int n) {
 }
 
 void reverse_whole(void) {
-	
+	gnode head2, tail2, tmp, buf;
+	head2 = tail;
+	tail2 = head;
+	tail2->prev = head->next;
+	tail2->next = NULL;
+	tmp = tail2->prev;
+	while(tmp!=NULL) {
+		buf = tmp->next;
+		tmp->next = tmp->prev;
+		tmp->prev = buf;
+		tmp = buf;
+	}
+	head = head2;
+	tail = tail2;
 	return;
 }
 
 void reverse_stack_n(int f, int n) {
-	
+	int i;
+	gnode tmp, buf, tmp2;
+	tmp=(f==1)?head:tail;
+	tmp2 = tmp;
+	for(i=0;i<n-1;i++) {
+		if(tmp==NULL)
+			break;
+		if(f==1) {
+			buf = tmp->next;
+			tmp->next = tmp->prev;
+			tmp->prev = buf;
+		} else {
+			buf = tmp->prev;
+			tmp->prev = tmp->next;
+			tmp->next = buf;
+		}
+		tmp = buf;
+	}
+	if(tmp!=NULL) {
+		if(f==1) {
+			tmp->next->prev = tmp2;
+			tmp2->next = tmp->next;
+			tmp->next = tmp->prev;
+			tmp->prev = NULL;
+			head = tmp;
+		} else {
+			tmp->prev->next = tmp2;
+			tmp2->prev = tmp->prev;
+			tmp->prev = tmp->next;
+			tmp->next = NULL;
+			tail = tmp;
+		}
+	}
 	return;
 }
 
@@ -276,7 +321,8 @@ void move(int f, int n) {
 }
 
 void read_n(int f, int n) {
-	int i, in;
+	int i;
+	char in;
 	gnode tmp;
 	if(head==NULL)
 		push_number_into_stack(32);
@@ -288,7 +334,7 @@ void read_n(int f, int n) {
 	}
 	if(tmp!=NULL) {
 		scanf("%c",&in);
-		tmp->v = in;
+		tmp->v = (int)in;
 	} else
 		yyerror("Number of elements in the stack is less than the required number");
 	return;
