@@ -13,21 +13,21 @@ extern void yyerror(char *);
 
 typedef struct node {
 	int v;
-	struct node  *next;
-	struct node *prev;
+	struct node  *down;
+	struct node *up;
 } *gnode;
 
-gnode head=NULL;
-gnode tail=NULL;
+gnode top=NULL;
+gnode bottom=NULL;
 
 void clear_stack(void) {
 	gnode tmp, buf;
-	tmp=head;
-	head=NULL;
-	tail=NULL;
+	tmp=top;
+	top=NULL;
+	bottom=NULL;
 	while(tmp!=NULL) {
 		buf=tmp;
-		tmp=tmp->next;
+		tmp=tmp->down;
 		free(buf);
 	}
 	return;
@@ -36,45 +36,45 @@ void clear_stack(void) {
 void slide(int n) {
 	int i;
 	gnode tmp, buf;
-	tmp=head->next;
+	tmp=top->down;
 	for(i=0;i<n;i++) {
 		if(tmp!=NULL) {
 			buf=tmp;
-			tmp=tmp->next;
+			tmp=tmp->down;
 			free(buf);
 		} else
 			break;
 	}
-	head->next=tmp;
+	top->down=tmp;
 	if(tmp!=NULL)
-		tmp->prev=head;
+		tmp->up=top;
 	else
-		tail=head;
+		bottom=top;
 	return;
 }
 
 void push_number_into_stack(int n) {
 	gnode tmp=malloc(sizeof(gnode));
 	tmp->v=n;
-	tmp->prev=NULL;
-	if(head==NULL) {
-		head=tmp;
-		tail=tmp;
-		tmp->next=NULL;
+	tmp->up=NULL;
+	if(top==NULL) {
+		top=tmp;
+		bottom=tmp;
+		tmp->down=NULL;
 	} else {
-		tmp->next=head;
-		head->prev=tmp;
-		head=tmp;
+		tmp->down=top;
+		top->up=tmp;
+		top=tmp;
 	}
 	return;
 }
 
 void pop_number(void) {
 	gnode tmp;
-	tmp=head;
-	head=tmp->next;
-	if(head!=NULL)
-		head->prev=NULL;
+	tmp=top;
+	top=tmp->down;
+	if(top!=NULL)
+		top->up=NULL;
 	free(tmp);
 	return;
 }
@@ -86,16 +86,16 @@ void pop_numbers_from_stack(int f, int n) {
 		if(tmp==NULL)
 			break;
 		if(f==1) {
-			tmp=head;
-			head=tmp->next;
-			if(head!=NULL)
-				head->prev=NULL;
+			tmp=top;
+			top=tmp->down;
+			if(top!=NULL)
+				top->up=NULL;
 			free(tmp);
 		} else {
-			tmp=tail;
-			tail=tmp->prev;
-			if(tail!=NULL)
-				tail->next=NULL;
+			tmp=bottom;
+			bottom=tmp->up;
+			if(bottom!=NULL)
+				bottom->down=NULL;
 			free(tmp);
 		}
 	}
@@ -106,11 +106,11 @@ void pop_numbers_from_stack(int f, int n) {
 
 void dup_stack(void) {
 	gnode tmp, buf;
-	tmp=tail;
-	buf=head;
+	tmp=bottom;
+	buf=top;
 	while(tmp!=buf) {
 		push_number_into_stack(tmp->v);
-		tmp=tmp->prev;
+		tmp=tmp->up;
 	}
 	push_number_into_stack(buf->v);
 	return;
@@ -118,35 +118,35 @@ void dup_stack(void) {
 
 void dup_stack_n(int f, int n) {
 	int i;
-	gnode tmp, buf, head2, tail2;
-	tmp=(f==1)?head:tail;
-	head2=head;
-	tail2=tail;
+	gnode tmp, buf, top2, bottom2;
+	tmp=(f==1)?top:bottom;
+	top2=top;
+	bottom2=bottom;
 	for(i=0;i<n;i++) {
 		if(tmp==NULL)
 			break;
 		if(f==1) {
 			buf=malloc(sizeof(gnode));
 			buf->v=tmp->v;
-			buf->next=head2;
-			buf->prev=head2->prev;
-			if(head2->prev!=NULL)
-				head2->prev->next=buf;
+			buf->down=top2;
+			buf->up=top2->up;
+			if(top2->up!=NULL)
+				top2->up->down=buf;
 			else
-				head=buf;
-			head2->prev=buf;
-			tmp=tmp->next;
+				top=buf;
+			top2->up=buf;
+			tmp=tmp->down;
 		} else {
 			buf=malloc(sizeof(gnode));
 			buf->v=tmp->v;
-			buf->prev=tail2;
-			buf->next=tail2->next;
-			if(tail2->next!=NULL)
-				tail2->next->prev=buf;
+			buf->up=bottom2;
+			buf->down=bottom2->down;
+			if(bottom2->down!=NULL)
+				bottom2->down->up=buf;
 			else
-				tail=buf;
-			tail2->next=buf;
-			tmp=tmp->prev;
+				bottom=buf;
+			bottom2->down=buf;
+			tmp=tmp->up;
 		}
 	}
 	if(tmp==NULL)
@@ -157,11 +157,11 @@ void dup_stack_n(int f, int n) {
 void copy_nth(int f, int n) {
 	int i;
 	gnode tmp;
-	tmp=(f==1)?head:tail;
+	tmp=(f==1)?top:bottom;
 	for(i=1;i<n;i++) {
 		if(tmp==NULL)
 			break;
-		tmp=(f==1)?tmp->next:tmp->prev;
+		tmp=(f==1)?tmp->down:tmp->up;
 	}
 	if(tmp==NULL)
 		yyerror("Number of elements in the stack is less than the required number");
@@ -172,24 +172,24 @@ void copy_nth(int f, int n) {
 
 void arith(int m) {
 	int r;
-	if(head==NULL || head->next==NULL)
+	if(top==NULL || top->down==NULL)
 		yyerror("Number of elements in the stack is less than the required elements");
 	switch(m) {
 		case 1:
-			r=head->v+head->next->v;
+			r=top->v+top->down->v;
 			break;
 		case 2:
-			r=head->next->v-head->v;
+			r=top->down->v-top->v;
 			break;
 		case 3:
-			r=head->v*head->next->v;
+			r=top->v*top->down->v;
 			break;
 		case 4:
-			if(head->v==0) {
+			if(top->v==0) {
 				yyerror("Division by zero not possible");
-				r=head->next->v;
+				r=top->down->v;
 			} else
-				r=head->next->v/head->v;
+				r=top->down->v/top->v;
 			break;
 	}
 	push_number_into_stack(r);
@@ -197,18 +197,18 @@ void arith(int m) {
 }
 
 void crement(int f, int n) {
-	head->v=(f==1)?(head->v+n):(head->v-n);
+	top->v=(f==1)?(top->v+n):(top->v-n);
 	return;
 }
 
 void print_whole_stack(int a) {
-	gnode tmp=tail;
+	gnode tmp=bottom;
 	while(tmp!=NULL) {
 		if(a==1)
 			printf("%d",tmp->v);
 		else
 			printf("%c",tmp->v);
-		tmp=tmp->prev;
+		tmp=tmp->up;
 	}
 	return;
 }
@@ -216,14 +216,14 @@ void print_whole_stack(int a) {
 void print_stack_n(int f, int a, int n) {
 	int i, flag=0;
 	gnode tmp;
-	tmp=(f==1)?head:tail;
+	tmp=(f==1)?top:bottom;
 	if(f==1) {
 		for(i=1;i<n;i++) {
 			if(tmp==NULL) {
 				yyerror("Number of elements in the stack is less than the required number");
 				break;
 			}
-			tmp=tmp->next;
+			tmp=tmp->down;
 		}
 	}
 	for(i=0;i<n;i++) {
@@ -235,7 +235,7 @@ void print_stack_n(int f, int a, int n) {
 			printf("%d",tmp->v);
 		else
 			printf("%c",tmp->v);
-		tmp=tmp->prev;
+		tmp=tmp->up;
 	}
 	if(flag==1)
 		yyerror("Number of elements in the stack is less than the required number");
@@ -243,55 +243,55 @@ void print_stack_n(int f, int a, int n) {
 }
 
 void reverse_whole(void) {
-	gnode head2, tail2, tmp, buf;
-	head2 = tail;
-	tail2 = head;
-	tail2->prev = head->next;
-	tail2->next = NULL;
-	tmp = tail2->prev;
+	gnode top2, bottom2, tmp, buf;
+	top2 = bottom;
+	bottom2 = top;
+	bottom2->up = top->down;
+	bottom2->down = NULL;
+	tmp = bottom2->up;
 	while(tmp!=NULL) {
-		buf = tmp->next;
-		tmp->next = tmp->prev;
-		tmp->prev = buf;
+		buf = tmp->down;
+		tmp->down = tmp->up;
+		tmp->up = buf;
 		tmp = buf;
 	}
-	head = head2;
-	tail = tail2;
+	top = top2;
+	bottom = bottom2;
 	return;
 }
 
 void reverse_stack_n(int f, int n) {
 	int i;
 	gnode tmp, buf, tmp2;
-	tmp=(f==1)?head:tail;
+	tmp=(f==1)?top:bottom;
 	tmp2 = tmp;
 	for(i=0;i<n-1;i++) {
 		if(tmp==NULL)
 			break;
 		if(f==1) {
-			buf = tmp->next;
-			tmp->next = tmp->prev;
-			tmp->prev = buf;
+			buf = tmp->down;
+			tmp->down = tmp->up;
+			tmp->up = buf;
 		} else {
-			buf = tmp->prev;
-			tmp->prev = tmp->next;
-			tmp->next = buf;
+			buf = tmp->up;
+			tmp->up = tmp->down;
+			tmp->down = buf;
 		}
 		tmp = buf;
 	}
 	if(tmp!=NULL) {
 		if(f==1) {
-			tmp->next->prev = tmp2;
-			tmp2->next = tmp->next;
-			tmp->next = tmp->prev;
-			tmp->prev = NULL;
-			head = tmp;
+			tmp->down->up = tmp2;
+			tmp2->down = tmp->down;
+			tmp->down = tmp->up;
+			tmp->up = NULL;
+			top = tmp;
 		} else {
-			tmp->prev->next = tmp2;
-			tmp2->prev = tmp->prev;
-			tmp->prev = tmp->next;
-			tmp->next = NULL;
-			tail = tmp;
+			tmp->up->down = tmp2;
+			tmp2->up = tmp->up;
+			tmp->up = tmp->down;
+			tmp->down = NULL;
+			bottom = tmp;
 		}
 	}
 	return;
@@ -299,21 +299,21 @@ void reverse_stack_n(int f, int n) {
 
 void move_top(void) {
 	gnode tmp, buf;
-	tmp=head;
-	buf=head;
+	tmp=top;
+	buf=top;
 	while(tmp!=NULL) {
 		buf=tmp;
-		tmp=tmp->prev;
+		tmp=tmp->up;
 	}
-	head=buf;
+	top=buf;
 	return;
 }
 
 void move(int f, int n) {
 	int i;
 	for(i=0;i<n;i++) {
-		if(head!=NULL)
-			head=(f==1)?head->next:head->prev;
+		if(top!=NULL)
+			top=(f==1)?top->down:top->up;
 		else
 			yyerror("Number of elements in the stack is less than the required number");
 	}
@@ -324,13 +324,13 @@ void read_n(int f, int n) {
 	int i;
 	char in;
 	gnode tmp;
-	if(head==NULL)
+	if(top==NULL)
 		push_number_into_stack(32);
-	tmp=(f==1)?head:tail;
+	tmp=(f==1)?top:bottom;
 	for(i=1;i<n;i++) {
 		if(tmp==NULL)
 			break;
-		tmp=(f==1)?tmp->next:tmp->prev;
+		tmp=(f==1)?tmp->down:tmp->up;
 	}
 	if(tmp!=NULL) {
 		scanf("%c",&in);
@@ -341,7 +341,7 @@ void read_n(int f, int n) {
 }
 
 void read_top(void) {
-	read_n(1,head->v+1);
+	read_n(1,top->v+1);
 	return;
 }
 
