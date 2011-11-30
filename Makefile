@@ -28,7 +28,7 @@ y.tab.c: parser.y
 install: genome
 	$(INSTALL) genome $(prefix)/genome
 
-check: $(TEST_SCRIPT) genome
+test: $(TEST_SCRIPT) genome
 	$(RUBY) $<
 
 clean:

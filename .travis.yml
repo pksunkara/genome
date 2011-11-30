@@ -1,0 +1,6 @@
+rvm: 1.9.3
+script: "make && make test"
+notifications:
+  irc: "irc.freenode.net#pksunkara"
+  email:
+    on_success: never
