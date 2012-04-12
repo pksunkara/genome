@@ -36,7 +36,7 @@
 	extern void read_n(int, int);
 %}
 
-%token AAA // Duplicate the whole stack 
+%token AAA // Duplicate the whole stack
 %token AAT // Duplicate top n items on the stack
 %token AAC // Duplicate top item on the stack
 %token AAG // Duplicate bottom n items on the stack
@@ -48,7 +48,7 @@
 
 %token ACA // Clear the whole stack
 %token ACT // Copy top nth item on the stack
-%token ACC // Slide n items keeping top item 
+%token ACC // Slide n items keeping top item
 %token ACG // Copy bottom nth item on the stack
 
 %token AGA // Reverse the whole stack
@@ -113,7 +113,12 @@
 
 %%
 
-program: block CGG { exit(0); };
+program: block end;
+
+end:	/*empty*/
+	| CGG { exit(0); }
+	| CGG number { exit($2); }
+	;
 
 block: start stmts stop;
 
@@ -175,7 +180,7 @@ number: hex { $$=$1; }
 	| hex hex hex hex hex hex hex hex { $$=16*(16*(16*(16*(16*(16*(16*($1)+$2)+$3)+$4)+$5)+$6)+$7)+$8; }
 	;
 
-hex: 	GAA { $$=0; }
+hex:	GAA { $$=0; }
 	| GAT { $$=1; }
 	| GAC { $$=2; }
 	| GAG { $$=3; }
