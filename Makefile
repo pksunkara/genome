@@ -1,7 +1,7 @@
 prefix= /usr/bin
 
-RUBY= ruby
-TEST_SCRIPT= test/run_all.rb
+NODE= node
+TEST_SCRIPT= test/test.js
 
 INSTALL= install
 CC= gcc
@@ -29,7 +29,7 @@ install: genome
 	$(INSTALL) genome $(prefix)/genome
 
 test: $(TEST_SCRIPT) genome
-	$(RUBY) $<
+	$(NODE) $<
 
 clean:
 	$(RM) *.o

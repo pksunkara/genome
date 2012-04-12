@@ -1,0 +1,8 @@
+{
+  "name": "genome",
+  "version": "1.0.0",
+  "devDependencies": {
+    "suite": "0.1.x",
+    "async": "0.1.x"
+  }
+}
