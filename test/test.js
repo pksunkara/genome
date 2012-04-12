@@ -15,4 +15,7 @@ async.forEachSeries(num, function (i, cb) {
 }, function (err) {
   if (err) throw err;;
   genome.statsput();
+  if (genome.stats.fail > 0) {
+    process.exit(1);
+  }
 });

@@ -4,5 +4,8 @@
   "devDependencies": {
     "suite": "0.1.x",
     "async": "0.1.x"
+  },
+  "scripts": {
+    "test": "make && make test"
   }
 }
