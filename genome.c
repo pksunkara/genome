@@ -13,15 +13,15 @@ extern void yyerror(char *);
 
 typedef struct mem {
 	int v;
-	struct mem  *down;
+	struct mem *down;
 	struct mem *up;
 } *gmem;
 
 typedef struct ins {
 	int t;
 	int n;
-	struct ins *down;
-	struct ins *up;
+	struct ins *prev;
+	struct ins *next;
 } *gins;
 
 gmem top = NULL;
@@ -30,8 +30,39 @@ gmem bottom = NULL;
 gins start = NULL;
 gins stop = NULL;
 
-void insert_instr(type, num) {
+/*
+ * Insert an instruction
+ */
+void insert_instr(int type, int num) {
+	gins tmp = malloc(sizeof(gins));
+	tmp->t = type;
+	tmp->next = NULL;
+	if(stop == NULL) {
+		stop = tmp;
+		start = tmp;
+		tmp->prev = NULL;
+	} else {
+		tmp->prev = stop;
+		stop->next = tmp;
+		stop = tmp;
+	}
+	return;
+}
 
+/*
+ * Clear the instruction stack
+ */
+void clear_instr(void) {
+	gins tmp, buf;
+	tmp = stop;
+	start = NULL;
+	stop = NULL;
+	while(tmp != NULL) {
+		buf = tmp;
+		tmp = tmp->prev;
+		free(buf);
+	}
+	return;
 }
 
 /*
@@ -433,6 +464,8 @@ void read_top(void) {
 }
 
 void execute(void) {
+	clear_instr();
+	clear_stack();
 	return;
 }
 
