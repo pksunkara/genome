@@ -6,6 +6,6 @@
     "async": "0.1.x"
   },
   "scripts": {
-    "test": "make && make test"
+    "test": "make && make test && make clean"
   }
 }

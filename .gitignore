@@ -6,3 +6,5 @@ y.tab.*
 test/*/output
 node_modules
 npm-debug.log
+.project
+.cproject

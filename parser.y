@@ -70,10 +70,10 @@
 %token TCT // Jump on top item zero to start of the block
 %token TCC // Jump on nth item zero to start of the block
 %token TCG // Jump on bottom item zero to start of the block
-%token TGA // Jump unconditionally to end of the bkock
-%token TGT // Jump on top item zero to end of the bkock
-%token TGC // Jump on nth item zero to end of the bkock
-%token TGG // Jump on bottom item zero to end of the bkock
+%token TGA // Jump unconditionally to end of the block
+%token TGT // Jump on top item zero to end of the block
+%token TGC // Jump on nth item zero to end of the block
+%token TGG // Jump on bottom item zero to end of the block
 
 %token CAA // Print the whole stack
 %token CAT // Print top n items of stack
@@ -84,7 +84,7 @@
 %token CTC // Print top item of stack (ASCII)
 %token CTG // Print bottom n items of stack (ASCII)
 
-%token CCA // Read input to n given by top item of stack.
+%token CCA // Read input to n given by top item of stack
 %token CCT // Read input to top nth of the stack
 %token CCC // Read input to top of the stack
 %token CCG // Read input to bottom nth of the stack
