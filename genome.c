@@ -20,7 +20,6 @@ typedef struct mem {
 typedef struct ins {
 	int t;
 	int n;
-	struct ins *prev;
 	struct ins *next;
 } *gins;
 
@@ -36,13 +35,12 @@ gins stop = NULL;
 void insert_instr(int type, int num) {
 	gins tmp = malloc(sizeof(gins));
 	tmp->t = type;
+	tmp->n = num;
 	tmp->next = NULL;
 	if(stop == NULL) {
 		stop = tmp;
 		start = tmp;
-		tmp->prev = NULL;
 	} else {
-		tmp->prev = stop;
 		stop->next = tmp;
 		stop = tmp;
 	}
@@ -54,12 +52,12 @@ void insert_instr(int type, int num) {
  */
 void clear_instr(void) {
 	gins tmp, buf;
-	tmp = stop;
+	tmp = start;
 	start = NULL;
 	stop = NULL;
 	while(tmp != NULL) {
 		buf = tmp;
-		tmp = tmp->prev;
+		tmp = tmp->next;
 		free(buf);
 	}
 	return;
@@ -463,7 +461,144 @@ void read_top(void) {
 	return;
 }
 
+/*
+ * Execute the instructions
+ */
+void execute_instr(void) {
+	gins buf;
+
+	if (start != NULL) {
+		buf = start;
+	} else {
+		return;
+	}
+
+	while (1) {
+		switch (buf->t) {
+			case 0:
+				exit(buf->n);
+				break;
+			case 1:
+				dup_stack();
+				break;
+			case 2:
+				dup_stack_n(1, buf->n);
+				break;
+			case 3:
+				copy_nth(1, 1);
+				break;
+			case 4:
+				dup_stack_n(0, buf->n);
+				break;
+			case 5:
+				push_number_into_stack(buf->n);
+				break;
+			case 6:
+				pop_numbers_from_stack(1, buf->n);
+				break;
+			case 7:
+				pop_number();
+				break;
+			case 8:
+				pop_numbers_from_stack(0, buf->n);
+				break;
+			case 9:
+				clear_stack();
+				break;
+			case 10:
+				copy_nth(1, buf->n);
+				break;
+			case 11:
+				slide(buf->n);
+				break;
+			case 12:
+				copy_nth(0, buf->n);
+				break;
+			case 13:
+				reverse_whole();
+				break;
+			case 14:
+				reverse_stack_n(1, buf->n);
+				break;
+			case 15:
+				reverse_stack_n(0, buf->n);
+				break;
+			case 16:
+				arith(buf->n);
+				break;
+			case 17:
+				crement(1, buf->n);
+				break;
+			case 18:
+				crement(0, buf->n);
+				break;
+			case 19:
+				print_whole_stack(buf->n);
+				break;
+			case 20:
+				print_stack_n(1, 1, buf->n);
+				break;
+			case 21:
+				print_stack_n(0, 1, buf->n);
+				break;
+			case 22:
+				print_stack_n(1, 0, buf->n);
+				break;
+			case 23:
+				print_stack_n(0, 0, buf->n);
+				break;
+			case 24:
+				read_top();
+				break;
+			case 25:
+				read_n(1, buf->n);
+				break;
+			case 26:
+				read_n(0, buf->n);
+				break;
+			case 27:
+				move_top();
+				break;
+			case 28:
+				move(1, buf->n);
+				break;
+			case 29:
+				move(0, buf->n);
+				break;
+			case 30:
+				break;
+			case 31:
+				break;
+			case 32:
+				break;
+			case 33:
+				break;
+			case 34:
+				break;
+			case 35:
+				break;
+			case 36:
+				break;
+			case 37:
+				break;
+			case 38:
+				break;
+			default:
+				break;
+		}
+		if (buf->next == NULL) {
+			break;
+		} else {
+			buf = buf->next;
+		}
+	}
+}
+
+/*
+ * Execute the program
+ */
 void execute(void) {
+	execute_instr();
 	clear_instr();
 	clear_stack();
 	return;

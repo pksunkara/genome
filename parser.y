@@ -17,24 +17,6 @@
 	void yyerror(char* msg);
 
 	extern void insert_instr(int, int);
-	extern void clear_stack(void);
-	extern void slide(int);
-	extern void push_number_into_stack(int);
-	extern void pop_number(void);
-	extern void pop_numbers_from_stack(int, int);
-	extern void dup_stack(void);
-	extern void dup_stack_n(int, int);
-	extern void copy_nth(int, int);
-	extern void arith(int);
-	extern void crement(int, int);
-	extern void print_whole_stack(int);
-	extern void print_stack_n(int, int, int);
-	extern void reverse_whole(void);
-	extern void reverse_stack_n(int, int);
-	extern void move_top(void);
-	extern void move(int, int);
-	extern void read_top(void);
-	extern void read_n(int, int);
 %}
 
 %token AAA // Duplicate the whole stack
@@ -117,8 +99,8 @@
 program: block end;
 
 end:	/*empty*/
-	| CGG { exit(0); }
-	| CGG number { exit($2); }
+	| CGG { insert_instr(0, 0); }
+	| CGG number { insert_instr(0, $2); }
 	;
 
 block: start stmts stop;
@@ -128,47 +110,47 @@ stmts: /*empty*/
 	;
 
 stmt:	block
-	| AAA { insert_instr(1,-1); dup_stack(); }
-	| AAT number { insert_instr(2,$2); dup_stack_n(1,$2); }
-	| AAC { insert_instr(3,1); copy_nth(1,1); }
-	| AAG number { insert_instr(4,$2); dup_stack_n(0,$2); }
-	| ATA number { insert_instr(5,$2); push_number_into_stack($2); }
-	| ATT number { insert_instr(6,$2); pop_numbers_from_stack(1,$2); }
-	| ATC { insert_instr(7,-1); pop_number(); }
-	| ATG number { insert_instr(8,$2); pop_numbers_from_stack(0,$2); }
-	| ACA { insert_instr(9,-1); clear_stack(); }
-	| ACT number { insert_instr(9,$2); copy_nth(1,$2); }
-	| ACC number { insert_instr(10,$2); slide($2); }
-	| ACG number { insert_instr(11,$2); copy_nth(0,$2); }
-	| AGA { insert_instr(12,-1); reverse_whole(); }
-	| AGT number { insert_instr(13,$2); reverse_stack_n(1,$2); }
-	| AGC { insert_instr(14,2); reverse_stack_n(1,2); }
-	| AGG number { insert_instr(15,$2); reverse_stack_n(0,$2); }
-	| TAA { insert_instr(16,-1); arith(1); }
-	| TAT { insert_instr(17,-1); arith(2); }
-	| TAC { insert_instr(18,-1); arith(3); }
-	| TAG { insert_instr(19,-1); arith(4); }
-	| TTA { insert_instr(20,1); crement(1,1); }
-	| TTA number { insert_instr(21,$2); crement(1,$2); }
-	| TTT { insert_instr(22,1); crement(0,1); }
-	| TTT number { insert_instr(22,$2); crement(0,$2); }
-	| CAA { insert_instr(23,-1); print_whole_stack(1); }
-	| CAT number { insert_instr(24,$2); print_stack_n(1,1,$2); }
-	| CAC { insert_instr(25,1); print_stack_n(1,1,1); }
-	| CAG number { insert_instr(26,$2); print_stack_n(0,1,$2); }
-	| CTA { insert_instr(27,-1); print_whole_stack(0); }
-	| CTT number { insert_instr(28,$2); print_stack_n(1,0,$2); }
-	| CTC { insert_instr(29,1); print_stack_n(1,0,1); }
-	| CTG number { insert_instr(30,$2); print_stack_n(0,0,$2); }
-	| CCA { insert_instr(31,-1); read_top(); }
-	| CCT number { insert_instr(32,$2); read_n(1,$2); }
-	| CCC { insert_instr(33,1); read_n(1,1); }
-	| CCG number { insert_instr(34,$2); read_n(0,$2); }
-	| CGA { insert_instr(35,-1); move_top(); }
-	| CGT { insert_instr(36,1); move(1,1); }
-	| CGT number { insert_instr(37,$2); move(1,$2); }
-	| CGC { insert_instr(38,1); move(0,1); }
-	| CGC number { insert_instr(38,$2); move(0,$2); }
+	| AAA { insert_instr(1,0); }
+	| AAT number { insert_instr(2,$2); }
+	| AAC { insert_instr(3,1); }
+	| AAG number { insert_instr(4,$2); }
+	| ATA number { insert_instr(5,$2); }
+	| ATT number { insert_instr(6,$2); }
+	| ATC { insert_instr(7,0); }
+	| ATG number { insert_instr(8,$2); }
+	| ACA { insert_instr(9,0); }
+	| ACT number { insert_instr(10,$2); }
+	| ACC number { insert_instr(11,$2); }
+	| ACG number { insert_instr(12,$2); }
+	| AGA { insert_instr(13,0); }
+	| AGT number { insert_instr(14,$2); }
+	| AGC { insert_instr(14,2); }
+	| AGG number { insert_instr(15,$2); }
+	| TAA { insert_instr(16,1); }
+	| TAT { insert_instr(16,2); }
+	| TAC { insert_instr(16,3); }
+	| TAG { insert_instr(16,4); }
+	| TTA { insert_instr(17,1); }
+	| TTA number { insert_instr(17,$2); }
+	| TTT { insert_instr(18,1); }
+	| TTT number { insert_instr(18,$2); }
+	| CAA { insert_instr(19,1); }
+	| CAT number { insert_instr(20,$2); }
+	| CAC { insert_instr(20,1); }
+	| CAG number { insert_instr(21,$2); }
+	| CTA { insert_instr(19,0); }
+	| CTT number { insert_instr(22,$2); }
+	| CTC { insert_instr(22,1); }
+	| CTG number { insert_instr(23,$2); }
+	| CCA { insert_instr(24,0); }
+	| CCT number { insert_instr(25,$2); }
+	| CCC { insert_instr(25,1); }
+	| CCG number { insert_instr(26,$2); }
+	| CGA { insert_instr(27,0); }
+	| CGT { insert_instr(28,1); }
+	| CGT number { insert_instr(28,$2); }
+	| CGC { insert_instr(29,1); }
+	| CGC number { insert_instr(29,$2); }
 	;
 
 number: hex { $$=$1; }
