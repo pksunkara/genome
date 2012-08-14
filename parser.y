@@ -134,6 +134,14 @@ stmt:	block
 	| TTA number { insert_instr(17,$2); }
 	| TTT { insert_instr(18,1); }
 	| TTT number { insert_instr(18,$2); }
+	| TCA { insert_instr(32, 0); }
+	| TCT { insert_instr(33, 1); }
+	| TCC number { insert_instr(33, $2); }
+	| TCG { insert_instr(34, 0); }
+	| TGA { insert_instr(35, 0); }
+	| TGT { insert_instr(36, 1); }
+	| TGC number { insert_instr(36, $2); }
+	| TGG { insert_instr(37, 0); }
 	| CAA { insert_instr(19,1); }
 	| CAT number { insert_instr(20,$2); }
 	| CAC { insert_instr(20,1); }
@@ -181,13 +189,9 @@ hex:	GAA { $$=0; }
 	| GGG { $$=15; }
 	;
 
-start: TTC {
-		/* Start block */
-	};
+start: TTC { insert_instr(30, 0); };
 
-stop: TTG {
-		/* End block */
-	};
+stop: TTG { insert_instr(31, 0); };
 
 %%
 

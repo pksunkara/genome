@@ -20,14 +20,14 @@ typedef struct mem {
 typedef struct ins {
 	int t;
 	int n;
-	struct ins *next;
+	struct ins *after;
 } *gins;
 
 gmem top = NULL;
 gmem bottom = NULL;
 
-gins start = NULL;
-gins stop = NULL;
+gins first = NULL;
+gins last = NULL;
 
 /*
  * Insert an instruction
@@ -36,14 +36,13 @@ void insert_instr(int type, int num) {
 	gins tmp = malloc(sizeof(gins));
 	tmp->t = type;
 	tmp->n = num;
-	tmp->next = NULL;
-	if(stop == NULL) {
-		stop = tmp;
-		start = tmp;
+	tmp->after = NULL;
+	if(last == NULL) {
+		first = tmp;
 	} else {
-		stop->next = tmp;
-		stop = tmp;
+		last->after = tmp;
 	}
+	last = tmp;
 	return;
 }
 
@@ -52,12 +51,12 @@ void insert_instr(int type, int num) {
  */
 void clear_instr(void) {
 	gins tmp, buf;
-	tmp = start;
-	start = NULL;
-	stop = NULL;
+	tmp = first;
+	first = NULL;
+	last = NULL;
 	while(tmp != NULL) {
 		buf = tmp;
-		tmp = tmp->next;
+		tmp = tmp->after;
 		free(buf);
 	}
 	return;
@@ -467,8 +466,8 @@ void read_top(void) {
 void execute_instr(void) {
 	gins buf;
 
-	if (start != NULL) {
-		buf = start;
+	if (first != NULL) {
+		buf = first;
 	} else {
 		return;
 	}
@@ -566,8 +565,10 @@ void execute_instr(void) {
 				move(0, buf->n);
 				break;
 			case 30:
+				/* Start block */
 				break;
 			case 31:
+				/* End block */
 				break;
 			case 32:
 				break;
@@ -586,10 +587,10 @@ void execute_instr(void) {
 			default:
 				break;
 		}
-		if (buf->next == NULL) {
+		if (buf->after == NULL) {
 			break;
 		} else {
-			buf = buf->next;
+			buf = buf->after;
 		}
 	}
 }
