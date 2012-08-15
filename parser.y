@@ -110,6 +110,7 @@ stmts: /*empty*/
 	;
 
 stmt:	block
+	| end
 	| AAA { insert_instr(1,0); }
 	| AAT number { insert_instr(2,$2); }
 	| AAC { insert_instr(3,1); }
