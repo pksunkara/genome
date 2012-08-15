@@ -41,84 +41,98 @@ _There are some examples in examples folder_
 
 The virtual machine maintains a stack for you to store things. Each cell in the stack is of size 4 bytes. A genome program starts with `TTC` and ends with `TTC CGG` and it should have the extension `.atcg`. Please check below to know what each instruction means.
 
-* AAA - Duplicate the whole stack
-* AAT - Duplicate top n items on the stack
-* AAC - Duplicate top item on the stack
-* AAG - Duplicate bottom n items on the stack
+### Stack manipulation
 
-* ATA - Push number onto stack
-* ATT - Pop top n items from stack
-* ATC - Pop number from stack (Discarding)
-* ATG - Pop bottom n items from stack
+* __AAA__ - Duplicate the whole stack
+* __AAT__ - Duplicate top n items on the stack
+* __AAC__ - Duplicate top item on the stack
+* __AAG__ - Duplicate bottom n items on the stack
+* __ATA__ - Push number onto stack
+* __ATT__ - Pop top n items from stack
+* __ATC__ - Pop number from stack (Discarding)
+* __ATG__ - Pop bottom n items from stack
+* __ACA__ - Clear the whole stack
+* __ACT__ - Copy top nth item on the stack
+* __ACC__ - Slide n items keeping top item
+* __ACG__ - Copy bottom nth item on the stack
+* __AGA__ - Reverse the whole stack
+* __AGT__ - Reverse the top n items
+* __AGC__ - Reverse the top 2 items
+* __AGG__ - Reverse the bottom n items
 
-* ACA - Clear the whole stack
-* ACT - Copy top nth item on the stack
-* ACC - Slide n items keeping top item
-* ACG - Copy bottom nth item on the stack
+### Arithematic
 
-* AGA - Reverse the whole stack
-* AGT - Reverse the top n items
-* AGC - Reverse the top 2 items
-* AGG - Reverse the bottom n items
+* __TAA__ - Addition 1+2 items and push the result
+* __TAT__ - Subtraction 2-1 items and push the result
+* __TAC__ - Multiplication 2x1 items and push the result
+* __TAG__ - Division 2/1 items and push the result
+* __TTA__ - Increment the top item by n (if nothing n=1)
+* __TTT__ - Decrement the top item by n (if nothing n=1)
 
-* TAA - Addition 1+2 items and push the result
-* TAT - Subtraction 2-1 items and push the result
-* TAC - Multiplication 2x1 items and push the result
-* TAG - Division 2/1 items and push the result
-* TTA - Increment the top item by n (if nothing n=1)
-* TTT - Decrement the top item by n (if nothing n=1)
+### Blocks and Jumps
 
-* TTC - Start block
-* TTG - Stop block
+* __TTC__ - Start block
+* __TTG__ - Stop block
+* __TCA__ - Jump unconditionally to start of the block
+* __TCT__ - Jump on top item zero to start of the block
+* __TCC__ - Jump on nth item zero to start of the block
+* __TCG__ - Jump on bottom item zero to start of the block
+* __TGA__ - Jump unconditionally to end of the block
+* __TGT__ - Jump on top item zero to end of the block
+* __TGC__ - Jump on nth item zero to end of the block
+* __TGG__ - Jump on bottom item zero to end of the block
 
-* TCA - Jump unconditionally to start of the block
-* TCT - Jump on top item zero to start of the block
-* TCC - Jump on nth item zero to start of the block
-* TCG - Jump on bottom item zero to start of the block
-* TGA - Jump unconditionally to end of the block
-* TGT - Jump on top item zero to end of the block
-* TGC - Jump on nth item zero to end of the block
-* TGG - Jump on bottom item zero to end of the block
+### Printing
 
-* CAA - Print the whole stack
-* CAT - Print top n items of stack
-* CAC - Print top item of the stack
-* CAG - Print bottom n items of stack
-* CTA - Print the whole stack (ASCII)
-* CTT - Print top n items of stack (ASCII)
-* CTC - Print top item of stack (ASCII)
-* CTG - Print bottom n items of stack (ASCII)
+* __CAA__ - Print the whole stack
+* __CAT__ - Print top n items of stack
+* __CAC__ - Print top item of the stack
+* __CAG__ - Print bottom n items of stack
+* __CTA__ - Print the whole stack (ASCII)
+* __CTT__ - Print top n items of stack (ASCII)
+* __CTC__ - Print top item of stack (ASCII)
+* __CTG__ - Print bottom n items of stack (ASCII)
 
-* CCA - Read input to n given by top item of stack
-* CCT - Read input to top nth of the stack
-* CCC - Read input to top of the stack
-* CCG - Read input to bottom nth of the stack
+### Scanning
 
-* CGA - Move to the top of the stack
-* CGT - Move down the stack by n (If nothing, n=1)
-* CGC - Move up the stack by n (If nothing, n=1)
-* CGG - End program
+* __CCA__ - Read input to n given by top item of stack
+* __CCT__ - Read input to top nth of the stack
+* __CCC__ - Read input to top of the stack
+* __CCG__ - Read input to bottom nth of the stack
+
+### Miscellaneous
+
+* __CGA__ - Move to the top of the stack
+* __CGT__ - Move down the stack by n (If nothing, n=1)
+* __CGC__ - Move up the stack by n (If nothing, n=1)
+* __CGG__ - End program
+
+### Numbers
 
 All the above instructions which contain `n` are/can be followed by a number which is represented by the following
 
-* GAA - Hex 0
-* GAT - Hex 1
-* GAC - Hex 2
-* GAG - Hex 3
-* GTA - Hex 4
-* GTT - Hex 5
-* GTC - Hex 6
-* GTG - Hex 7
-* GCA - Hex 8
-* GCT - Hex 9
-* GCC - Hex a
-* GCG - Hex b
-* GGA - Hex c
-* GGT - Hex d
-* GGC - Hex e
-* GGG - Hex f
+* __GAA__ - Hex 0
+* __GAT__ - Hex 1
+* __GAC__ - Hex 2
+* __GAG__ - Hex 3
+* __GTA__ - Hex 4
+* __GTT__ - Hex 5
+* __GTC__ - Hex 6
+* __GTG__ - Hex 7
+* __GCA__ - Hex 8
+* __GCT__ - Hex 9
+* __GCC__ - Hex a
+* __GCG__ - Hex b
+* __GGA__ - Hex c
+* __GGT__ - Hex d
+* __GGC__ - Hex e
+* __GGG__ - Hex f
+
+### Comments
 
 All comments are placed in `{}`
+
+### Example
 
 So, If I want to push a number 15000 onto stack, I can do the following
 
