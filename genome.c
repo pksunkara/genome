@@ -3,12 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern int yyleng;
 extern FILE* yyin;
-extern char* yytext;
 
 extern int yyparse(void);
-extern int yywrap(void);
 extern void yyerror(char *);
 
 typedef struct mem {
@@ -23,11 +20,18 @@ typedef struct ins {
 	struct ins *after;
 } *gins;
 
+typedef struct blk {
+	struct ins *link;
+	struct blk *next;
+} *gblk;
+
 gmem top = NULL;
 gmem bottom = NULL;
 
 gins first = NULL;
 gins last = NULL;
+
+gblk blks = NULL;
 
 /*
  * Insert an instruction
@@ -43,6 +47,32 @@ void insert_instr(int type, int num) {
 		last->after = tmp;
 	}
 	last = tmp;
+	return;
+}
+
+/*
+ * Push a block on the stack
+ */
+void push_blk(gins instr) {
+	gblk tmp = malloc(sizeof(gblk));
+	tmp->link = instr;
+	tmp->next = blks;
+	blks = tmp;
+	return;
+}
+
+/*
+ * Pop a block from the stack
+ */
+void pop_blk(void) {
+	gblk tmp;
+	tmp = blks;
+	if (tmp != NULL) {
+		blks = blks->next;
+		free(tmp);
+	} else {
+		yyerror("Stack underflow for blocks");
+	}
 	return;
 }
 
@@ -270,6 +300,88 @@ void arith(int m) {
 	}
 	push_number_into_stack(r);
 	return;
+}
+
+/*
+ * TCA -- Jump uncoditionally to start of the block
+ */
+gins jmp_start(void) {
+	if (blks == NULL || blks->link == NULL) {
+		yyerror("Block arrangments fault");
+	}
+	return blks->link;
+}
+
+/*
+ * TCT -- Jump on top item zero to start of the block
+ * TCC -- Jump on nth item zero to start of the block
+ * TCG -- Jump on bottom item zero to start of the block
+ */
+gins jmp_start_nth(int f, int n, gins buf) {
+	int i;
+	gmem tmp;
+	tmp = (f==1)?top:bottom;
+	for(i=1; i<n; i++) {
+		if(tmp == NULL)
+			break;
+		tmp = (f==1)?tmp->down:tmp->up;
+	}
+	if(tmp == NULL) {
+		yyerror("Number of elements in the stack is less than the required number");
+	} else if (tmp->v == 0) {
+		return jmp_start();
+	}
+	return buf;
+}
+
+/*
+ * TGA -- Jump uncoditionally to end of the block
+ */
+gins jmp_end(void) {
+	int i = 1;
+	gins tmp;
+
+	if (blks == NULL || blks->link == NULL) {
+		yyerror("Block arrangement fault");
+	} else {
+		tmp = blks->link;
+	}
+
+	while (1) {
+		if (tmp->t == 30) {
+			i = i + 1;
+		} else if (tmp->t == 31) {
+			i = i - 1;
+			if (i == 0) {
+				break;
+			}
+		}
+		tmp = tmp->after;
+	}
+
+	return tmp;
+}
+
+/*
+ * TGT -- Jump on top item zero to end of the block
+ * TGC -- Jump on nth item zero to end of the block
+ * TGG -- Jump on bottom item zero to end of the block
+ */
+gins jmp_end_nth(int f, int n, gins buf) {
+	int i;
+	gmem tmp;
+	tmp = (f==1)?top:bottom;
+	for(i=1; i<n; i++) {
+		if(tmp == NULL)
+			break;
+		tmp = (f==1)?tmp->down:tmp->up;
+	}
+	if(tmp == NULL) {
+		yyerror("Number of elements in the stack is less than the required number");
+	} else if (tmp->v == 0) {
+		return jmp_end();
+	}
+	return buf;
 }
 
 /*
@@ -565,24 +677,28 @@ void execute_instr(void) {
 				move(0, buf->n);
 				break;
 			case 30:
-				/* Start block */
+				push_blk(buf);
 				break;
 			case 31:
-				/* End block */
+				pop_blk();
 				break;
 			case 32:
+				buf = jmp_start();
 				break;
 			case 33:
+				buf = jmp_start_nth(1, buf->n, buf);
 				break;
 			case 34:
+				buf = jmp_start_nth(0, 1, buf);
 				break;
 			case 35:
+				buf = jmp_end();
 				break;
 			case 36:
+				buf = jmp_end_nth(1, buf->n, buf);
 				break;
 			case 37:
-				break;
-			case 38:
+				buf = jmp_end_nth(0, 1, buf);
 				break;
 			default:
 				break;
