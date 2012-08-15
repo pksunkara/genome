@@ -1,0 +1,20 @@
+{Jump unconditionally to start of the block}
+{Jump on zero to end of the block}
+TTC
+  ATA GCC
+  ATA GCC
+  TTC
+    TTT
+    AAC
+    TAC
+    CAC
+    ATT GAC
+    CTG GAT
+    TGT
+    TCA
+  TTG
+  ACA
+  ATA GTA GAT
+  ATA GCC
+  CTA
+TTG CGG

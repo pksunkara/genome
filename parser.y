@@ -211,10 +211,13 @@ void count(void) {
 }
 
 void yyerror(char* msg) {
-	if(strlen(yytext)) {
+	if (strlen(yytext)) {
 		printf("Error: Line %4.4d, Column %4.4d-%4.4d: %s\n",lineNum,(colNum-yyleng>0?colNum-yyleng:0),colNum-1,msg);
 	} else {
-		printf("%*s\n",0,"^");
+		if (strlen(msg) && msg != "syntax error") {
+			printf("%s\n", msg);
+			exit(1);
+		}
 		printf("Error: Line %d:Unexpected EOF found\n",lineNum);
 	}
 }

@@ -1,0 +1,11 @@
+{Jump unconditionally to end of the block}
+TTC
+  ATA GTA GAT
+  TTC
+    ATA GTA GAT
+    TGA
+    ATA GTA GAG
+  TTG
+  ATA GAA GCC
+  CTA
+TTG CGG

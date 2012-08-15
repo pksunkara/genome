@@ -171,24 +171,24 @@ void pop_numbers_from_stack(int f, int n) {
 	int i;
 	gmem tmp;
 	for(i=0; i<n; i++) {
-		if(tmp == NULL)
-			break;
 		if(f == 1) {
 			tmp = top;
 			top = tmp->down;
+			free(tmp);
 			if(top != NULL)
 				top->up = NULL;
-			free(tmp);
+			else
+				yyerror("Number of elements in the stack is less than required number");
 		} else {
 			tmp = bottom;
 			bottom = tmp->up;
+			free(tmp);
 			if(bottom != NULL)
 				bottom->down = NULL;
-			free(tmp);
+			else
+				yyerror("Number of elements in the stack is less than required number");
 		}
 	}
-	if(tmp == NULL)
-		yyerror("Number of elements in the stack is less than required number");
 	return;
 }
 
@@ -340,15 +340,16 @@ gins jmp_start_nth(int f, int n, gins buf) {
 gins jmp_end(void) {
 	int i = 1;
 	gins tmp;
-
 	if (blks == NULL || blks->link == NULL) {
 		yyerror("Block arrangement fault");
 	} else {
 		tmp = blks->link;
 	}
-
 	while (1) {
-		if (tmp->t == 30) {
+		tmp = tmp->after;
+		if (tmp == NULL) {
+			yyerror("No instruction after the end of block");
+		} else if (tmp->t == 30) {
 			i = i + 1;
 		} else if (tmp->t == 31) {
 			i = i - 1;
@@ -356,9 +357,7 @@ gins jmp_end(void) {
 				break;
 			}
 		}
-		tmp = tmp->after;
 	}
-
 	return tmp;
 }
 
