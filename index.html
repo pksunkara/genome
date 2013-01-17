@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Genome by pksunkara</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Genome</h1>
+        <h2>An esoteric programming language imitating genome sequence</h2>
+        <a href="https://github.com/pksunkara/genome" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <p>Genome is an esoteric programming language imitating the genome sequence of a living organism</p>
+
+<h2>Installation</h2>
+
+<pre><code>make install
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>Sample hello world program</p>
+
+<pre><code>TTC
+  ATA GTA GCA
+  ATA GTC GTT
+  ATA GTC GGA
+  AAC
+  ATA GTC GGG
+  ATA GAC GAA
+  ATA GTT GTG
+  ACT GAG
+  ATA GTG GAC
+  ACG GAG
+  ATA GTC GTA
+  ATA GAC GAT
+  ATA GCC
+  CTA
+TTG CGG
+</code></pre>
+
+<pre><code>Hello World!
+</code></pre>
+
+<p><em>There are some examples in examples folder</em></p>
+
+<h2>Instructions</h2>
+
+<p>The virtual machine maintains a stack for you to store things. Each cell in the stack is of size 4 bytes. A genome program starts with <code>TTC</code> and ends with <code>TTC CGG</code> and it should have the extension <code>.atcg</code>. Please check below to know what each instruction means.</p>
+
+<h3>Stack manipulation</h3>
+
+<ul>
+<li>
+<strong>AAA</strong> - Duplicate the whole stack</li>
+<li>
+<strong>AAT</strong> - Duplicate top n items on the stack</li>
+<li>
+<strong>AAC</strong> - Duplicate top item on the stack</li>
+<li>
+<strong>AAG</strong> - Duplicate bottom n items on the stack</li>
+<li>
+<strong>ATA</strong> - Push number onto stack</li>
+<li>
+<strong>ATT</strong> - Pop top n items from stack</li>
+<li>
+<strong>ATC</strong> - Pop number from stack (Discarding)</li>
+<li>
+<strong>ATG</strong> - Pop bottom n items from stack</li>
+<li>
+<strong>ACA</strong> - Clear the whole stack</li>
+<li>
+<strong>ACT</strong> - Copy top nth item on the stack</li>
+<li>
+<strong>ACC</strong> - Slide n items keeping top item</li>
+<li>
+<strong>ACG</strong> - Copy bottom nth item on the stack</li>
+<li>
+<strong>AGA</strong> - Reverse the whole stack</li>
+<li>
+<strong>AGT</strong> - Reverse the top n items</li>
+<li>
+<strong>AGC</strong> - Reverse the top 2 items</li>
+<li>
+<strong>AGG</strong> - Reverse the bottom n items</li>
+</ul><h3>Arithematic</h3>
+
+<ul>
+<li>
+<strong>TAA</strong> - Addition 1+2 items and push the result</li>
+<li>
+<strong>TAT</strong> - Subtraction 2-1 items and push the result</li>
+<li>
+<strong>TAC</strong> - Multiplication 2x1 items and push the result</li>
+<li>
+<strong>TAG</strong> - Division 2/1 items and push the result</li>
+<li>
+<strong>TTA</strong> - Increment the top item by n (if nothing n=1)</li>
+<li>
+<strong>TTT</strong> - Decrement the top item by n (if nothing n=1)</li>
+</ul><h3>Blocks and Jumps</h3>
+
+<ul>
+<li>
+<strong>TTC</strong> - Start block</li>
+<li>
+<strong>TTG</strong> - Stop block</li>
+<li>
+<strong>TCA</strong> - Jump unconditionally to start of the block</li>
+<li>
+<strong>TCT</strong> - Jump on top item zero to start of the block</li>
+<li>
+<strong>TCC</strong> - Jump on nth item zero to start of the block</li>
+<li>
+<strong>TCG</strong> - Jump on bottom item zero to start of the block</li>
+<li>
+<strong>TGA</strong> - Jump unconditionally to end of the block</li>
+<li>
+<strong>TGT</strong> - Jump on top item zero to end of the block</li>
+<li>
+<strong>TGC</strong> - Jump on nth item zero to end of the block</li>
+<li>
+<strong>TGG</strong> - Jump on bottom item zero to end of the block</li>
+</ul><h3>Printing</h3>
+
+<ul>
+<li>
+<strong>CAA</strong> - Print the whole stack</li>
+<li>
+<strong>CAT</strong> - Print top n items of stack</li>
+<li>
+<strong>CAC</strong> - Print top item of the stack</li>
+<li>
+<strong>CAG</strong> - Print bottom n items of stack</li>
+<li>
+<strong>CTA</strong> - Print the whole stack (ASCII)</li>
+<li>
+<strong>CTT</strong> - Print top n items of stack (ASCII)</li>
+<li>
+<strong>CTC</strong> - Print top item of stack (ASCII)</li>
+<li>
+<strong>CTG</strong> - Print bottom n items of stack (ASCII)</li>
+</ul><h3>Scanning</h3>
+
+<ul>
+<li>
+<strong>CCA</strong> - Read input to n given by top item of stack</li>
+<li>
+<strong>CCT</strong> - Read input to top nth of the stack</li>
+<li>
+<strong>CCC</strong> - Read input to top of the stack</li>
+<li>
+<strong>CCG</strong> - Read input to bottom nth of the stack</li>
+</ul><h3>Miscellaneous</h3>
+
+<ul>
+<li>
+<strong>CGA</strong> - Move to the top of the stack</li>
+<li>
+<strong>CGT</strong> - Move down the stack by n (If nothing, n=1)</li>
+<li>
+<strong>CGC</strong> - Move up the stack by n (If nothing, n=1)</li>
+<li>
+<strong>CGG</strong> - End program</li>
+</ul><h3>Numbers</h3>
+
+<p>All the above instructions which contain <code>n</code> are/can be followed by a number which is represented by the following</p>
+
+<ul>
+<li>
+<strong>GAA</strong> - Hex 0</li>
+<li>
+<strong>GAT</strong> - Hex 1</li>
+<li>
+<strong>GAC</strong> - Hex 2</li>
+<li>
+<strong>GAG</strong> - Hex 3</li>
+<li>
+<strong>GTA</strong> - Hex 4</li>
+<li>
+<strong>GTT</strong> - Hex 5</li>
+<li>
+<strong>GTC</strong> - Hex 6</li>
+<li>
+<strong>GTG</strong> - Hex 7</li>
+<li>
+<strong>GCA</strong> - Hex 8</li>
+<li>
+<strong>GCT</strong> - Hex 9</li>
+<li>
+<strong>GCC</strong> - Hex a</li>
+<li>
+<strong>GCG</strong> - Hex b</li>
+<li>
+<strong>GGA</strong> - Hex c</li>
+<li>
+<strong>GGT</strong> - Hex d</li>
+<li>
+<strong>GGC</strong> - Hex e</li>
+<li>
+<strong>GGG</strong> - Hex f</li>
+</ul><h3>Comments</h3>
+
+<p>All comments are placed in <code>{}</code></p>
+
+<h3>Example</h3>
+
+<p>So, If I want to push a number 15000 onto stack, I can do the following</p>
+
+<pre><code>ATA GAG GCC GCT GCA
+{push 0x3a98}
+</code></pre>
+
+<h2>Testing</h2>
+
+<pre><code>make test
+</code></pre>
+
+<h2>Contribution</h2>
+
+<p>Here is a list of <a href="http://github.com/pkumar/genome/contributors">contributors</a></p>
+
+<p><strong>I accept pull requests and guarantee a reply within a day</strong></p>
+
+<h2>License</h2>
+
+<p>MIT/X11</p>
+
+<h2>Bug reports</h2>
+
+<p>Report <a href="http://github.com/pkumar/genome/issues">here</a>. <strong>Guaranteed reply within a day</strong>.</p>
+
+<h2>Contact</h2>
+
+<p>Pavan Kumar Sunkara (<a href="mailto:pavan.sss1991@gmail.com">pavan.sss1991@gmail.com</a>)</p>
+
+<p>Follow me on <a href="http://github.com/pkumar">github</a>, <a href="http://twitter.com/pksunkara">twitter</a></p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/pksunkara/genome/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/pksunkara/genome/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/pksunkara/genome"></a> is maintained by <a href="https://github.com/pksunkara">pksunkara</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
