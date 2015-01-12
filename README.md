@@ -1,4 +1,4 @@
-# Genome [![Build Status](https://secure.travis-ci.org/pkumar/genome.png)](http://travis-ci.org/pkumar/genome)
+# Genome [![Build Status](https://travis-ci.org/pksunkara/genome.svg?branch=master)](http://travis-ci.org/pksunkara/genome)
 
 Genome is an esoteric programming language imitating the genome sequence of a living organism
 

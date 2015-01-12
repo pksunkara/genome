@@ -9,8 +9,8 @@
 	extern char* yytext;
 	extern int yyleng;
 	
-	int lineNum=1;
-	int colNum=1;
+	int lineNum = 1;
+	int colNum = 1;
 	
 	int yywrap(void);
 	void count(void);
@@ -202,12 +202,14 @@ int yywrap(void) {
 
 void count(void) {
 	int i;
-	for(i=0;i<strlen(yytext);i++) {
-		if(yytext[i]=='\n') {
-			colNum=1;
+
+	for (i = 0; i < strlen(yytext); i++) {
+		if (yytext[i] == '\n') {
+			colNum = 1;
 			lineNum++;
-		} else
+		} else {
 			colNum++;
+		}
 	}
 }
 
@@ -215,10 +217,11 @@ void yyerror(char* msg) {
 	if (strlen(yytext)) {
 		printf("Error: Line %4.4d, Column %4.4d-%4.4d: %s\n",lineNum,(colNum-yyleng>0?colNum-yyleng:0),colNum-1,msg);
 	} else {
-		if (strlen(msg) && msg != "syntax error") {
+		if (strlen(msg) && strcmp(msg, "syntax error") != 0) {
 			printf("%s\n", msg);
 			exit(1);
 		}
+
 		printf("Error: Line %d:Unexpected EOF found\n",lineNum);
 	}
 }

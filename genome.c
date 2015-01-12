@@ -38,14 +38,17 @@ gblk blks = NULL;
  */
 void insert_instr(int type, int num) {
 	gins tmp = malloc(sizeof(gins));
+
 	tmp->t = type;
 	tmp->n = num;
 	tmp->after = NULL;
-	if(last == NULL) {
+
+	if (last == NULL) {
 		first = tmp;
 	} else {
 		last->after = tmp;
 	}
+
 	last = tmp;
 	return;
 }
@@ -55,8 +58,10 @@ void insert_instr(int type, int num) {
  */
 void push_blk(gins instr) {
 	gblk tmp = malloc(sizeof(gblk));
+
 	tmp->link = instr;
 	tmp->next = blks;
+
 	blks = tmp;
 	return;
 }
@@ -67,12 +72,14 @@ void push_blk(gins instr) {
 void pop_blk(void) {
 	gblk tmp;
 	tmp = blks;
+
 	if (tmp != NULL) {
 		blks = blks->next;
 		free(tmp);
 	} else {
 		yyerror("Stack underflow for blocks");
 	}
+
 	return;
 }
 
@@ -84,11 +91,13 @@ void clear_instr(void) {
 	tmp = first;
 	first = NULL;
 	last = NULL;
-	while(tmp != NULL) {
+
+	while (tmp != NULL) {
 		buf = tmp;
 		tmp = tmp->after;
 		free(buf);
 	}
+
 	return;
 }
 
@@ -100,11 +109,13 @@ void clear_stack(void) {
 	tmp = top;
 	top = NULL;
 	bottom = NULL;
-	while(tmp != NULL) {
+
+	while (tmp != NULL) {
 		buf = tmp;
 		tmp = tmp->down;
 		free(buf);
 	}
+
 	return;
 }
 
@@ -115,19 +126,25 @@ void slide(int n) {
 	int i;
 	gmem tmp, buf;
 	tmp = top->down;
-	for(i=0; i<n; i++) {
-		if(tmp != NULL) {
+
+	for (i = 0; i < n; i++) {
+		if (tmp != NULL) {
 			buf = tmp;
 			tmp = tmp->down;
 			free(buf);
-		} else
+		} else {
 			break;
+		}
 	}
+
 	top->down = tmp;
-	if(tmp != NULL)
+
+	if(tmp != NULL) {
 		tmp->up = top;
-	else
+	} else {
 		bottom = top;
+	}
+
 	return;
 }
 
@@ -138,7 +155,8 @@ void push_number_into_stack(int n) {
 	gmem tmp = malloc(sizeof(gmem));
 	tmp->v = n;
 	tmp->up = NULL;
-	if(top == NULL) {
+
+	if (top == NULL) {
 		top = tmp;
 		bottom = tmp;
 		tmp->down = NULL;
@@ -147,6 +165,7 @@ void push_number_into_stack(int n) {
 		top->up = tmp;
 		top = tmp;
 	}
+
 	return;
 }
 
@@ -157,8 +176,11 @@ void pop_number(void) {
 	gmem tmp;
 	tmp = top;
 	top = tmp->down;
-	if(top != NULL)
+
+	if (top != NULL) {
 		top->up = NULL;
+	}
+
 	free(tmp);
 	return;
 }
@@ -170,25 +192,31 @@ void pop_number(void) {
 void pop_numbers_from_stack(int f, int n) {
 	int i;
 	gmem tmp;
-	for(i=0; i<n; i++) {
-		if(f == 1) {
+
+	for (i = 0; i < n; i++) {
+		if (f == 1) {
 			tmp = top;
 			top = tmp->down;
 			free(tmp);
-			if(top != NULL)
+
+			if (top != NULL) {
 				top->up = NULL;
-			else
+			} else {
 				yyerror("Number of elements in the stack is less than required number");
+			}
 		} else {
 			tmp = bottom;
 			bottom = tmp->up;
 			free(tmp);
-			if(bottom != NULL)
+
+			if (bottom != NULL) {
 				bottom->down = NULL;
-			else
+			} else {
 				yyerror("Number of elements in the stack is less than required number");
+			}
 		}
 	}
+
 	return;
 }
 
@@ -199,10 +227,12 @@ void dup_stack(void) {
 	gmem tmp, buf;
 	tmp = bottom;
 	buf = top;
-	while(tmp != buf) {
+
+	while (tmp != buf) {
 		push_number_into_stack(tmp->v);
 		tmp = tmp->up;
 	}
+
 	push_number_into_stack(buf->v);
 	return;
 }
@@ -214,21 +244,27 @@ void dup_stack(void) {
 void dup_stack_n(int f, int n) {
 	int i;
 	gmem tmp, buf, top2, bottom2;
-	tmp = (f==1)?top:bottom;
+	tmp = (f == 1 ? top : bottom);
 	top2 = top;
 	bottom2 = bottom;
-	for(i=0; i<n; i++) {
-		if(tmp == NULL)
+
+	for (i = 0; i < n; i++) {
+		if (tmp == NULL) {
 			break;
-		if(f == 1) {
+		}
+
+		if (f == 1) {
 			buf = malloc(sizeof(gmem));
 			buf->v = tmp->v;
 			buf->down = top2;
 			buf->up = top2->up;
-			if(top2->up != NULL)
+
+			if (top2->up != NULL) {
 				top2->up->down = buf;
-			else
+			} else {
 				top = buf;
+			}
+
 			top2->up = buf;
 			tmp = tmp->down;
 		} else {
@@ -236,16 +272,22 @@ void dup_stack_n(int f, int n) {
 			buf->v = tmp->v;
 			buf->up = bottom2;
 			buf->down = bottom2->down;
-			if(bottom2->down != NULL)
+
+			if (bottom2->down != NULL) {
 				bottom2->down->up = buf;
-			else
+			} else {
 				bottom = buf;
+			}
+
 			bottom2->down = buf;
 			tmp = tmp->up;
 		}
 	}
-	if(tmp == NULL)
+
+	if (tmp == NULL) {
 		yyerror("Number of elements in the stack is less than the required number");
+	}
+
 	return;
 }
 
@@ -257,16 +299,22 @@ void dup_stack_n(int f, int n) {
 void copy_nth(int f, int n) {
 	int i;
 	gmem tmp;
-	tmp = (f==1)?top:bottom;
-	for(i=1; i<n; i++) {
-		if(tmp == NULL)
+	tmp = (f == 1 ? top : bottom);
+
+	for (i = 1; i < n; i++) {
+		if (tmp == NULL) {
 			break;
-		tmp = (f==1)?tmp->down:tmp->up;
+		}
+
+		tmp = (f == 1 ? tmp->down : tmp->up);
 	}
-	if(tmp == NULL)
+
+	if (tmp == NULL) {
 		yyerror("Number of elements in the stack is less than the required number");
-	else
+	} else {
 		push_number_into_stack(tmp->v);
+	}
+
 	return;
 }
 
@@ -278,8 +326,11 @@ void copy_nth(int f, int n) {
  */
 void arith(int m) {
 	int r;
-	if(top == NULL || top->down == NULL)
+
+	if(top == NULL || top->down == NULL) {
 		yyerror("Number of elements in the stack is less than the required elements");
+	}
+
 	switch(m) {
 		case 1:
 			r = top->v + top->down->v;
@@ -291,13 +342,18 @@ void arith(int m) {
 			r = top->v * top->down->v;
 			break;
 		case 4:
+		{
 			if(top->v == 0) {
 				yyerror("Division by zero not possible");
 				r = top->down->v;
-			} else
+			} else {
 				r = top->down->v / top->v;
+			}
+
 			break;
+		}
 	}
+
 	push_number_into_stack(r);
 	return;
 }
@@ -309,6 +365,7 @@ gins jmp_start(void) {
 	if (blks == NULL || blks->link == NULL) {
 		yyerror("Block arrangments fault");
 	}
+
 	return blks->link;
 }
 
@@ -320,17 +377,22 @@ gins jmp_start(void) {
 gins jmp_start_nth(int f, int n, gins buf) {
 	int i;
 	gmem tmp;
-	tmp = (f==1)?top:bottom;
-	for(i=1; i<n; i++) {
-		if(tmp == NULL)
+	tmp = (f == 1 ? top : bottom);
+
+	for(i = 1; i < n; i++) {
+		if(tmp == NULL) {
 			break;
-		tmp = (f==1)?tmp->down:tmp->up;
+		}
+
+		tmp = (f == 1 ? tmp->down : tmp->up);
 	}
+
 	if(tmp == NULL) {
 		yyerror("Number of elements in the stack is less than the required number");
 	} else if (tmp->v == 0) {
 		return jmp_start();
 	}
+
 	return buf;
 }
 
@@ -340,24 +402,29 @@ gins jmp_start_nth(int f, int n, gins buf) {
 gins jmp_end(void) {
 	int i = 1;
 	gins tmp;
+
 	if (blks == NULL || blks->link == NULL) {
 		yyerror("Block arrangement fault");
 	} else {
 		tmp = blks->link;
 	}
+
 	while (1) {
 		tmp = tmp->after;
+
 		if (tmp == NULL) {
 			yyerror("No instruction after the end of block");
 		} else if (tmp->t == 30) {
 			i = i + 1;
 		} else if (tmp->t == 31) {
 			i = i - 1;
+
 			if (i == 0) {
 				break;
 			}
 		}
 	}
+
 	return tmp;
 }
 
@@ -369,17 +436,22 @@ gins jmp_end(void) {
 gins jmp_end_nth(int f, int n, gins buf) {
 	int i;
 	gmem tmp;
-	tmp = (f==1)?top:bottom;
-	for(i=1; i<n; i++) {
-		if(tmp == NULL)
+	tmp = (f == 1 ? top : bottom);
+
+	for (i = 1; i < n; i++) {
+		if (tmp == NULL) {
 			break;
-		tmp = (f==1)?tmp->down:tmp->up;
+		}
+
+		tmp = (f == 1 ? tmp->down : tmp->up);
 	}
-	if(tmp == NULL) {
+
+	if (tmp == NULL) {
 		yyerror("Number of elements in the stack is less than the required number");
 	} else if (tmp->v == 0) {
 		return jmp_end();
 	}
+
 	return buf;
 }
 
@@ -388,7 +460,7 @@ gins jmp_end_nth(int f, int n, gins buf) {
  * TTT -- Decrement the top item by n (if nothing n=1)
  */
 void crement(int f, int n) {
-	top->v = (f==1)?(top->v + n):(top->v - n);
+	top->v = (f == 1 ? (top->v + n) : (top->v - n));
 	return;
 }
 
@@ -397,14 +469,18 @@ void crement(int f, int n) {
  * CTA -- Print the whole stack (ASCII)
  */
 void print_whole_stack(int a) {
-	gmem tmp=bottom;
-	while(tmp!=NULL) {
-		if(a==1)
-			printf("%d",tmp->v);
-		else
-			printf("%c",tmp->v);
-		tmp=tmp->up;
+	gmem tmp = bottom;
+
+	while (tmp != NULL) {
+		if (a == 1) {
+			printf("%d", tmp->v);
+		} else {
+			printf("%c", tmp->v);
+		}
+
+		tmp = tmp->up;
 	}
+
 	return;
 }
 
@@ -417,31 +493,40 @@ void print_whole_stack(int a) {
  * CTG -- Print bottom n items of stack (ASCII)
  */
 void print_stack_n(int f, int a, int n) {
-	int i, flag=0;
+	int i, flag = 0;
 	gmem tmp;
-	tmp=(f==1)?top:bottom;
-	if(f==1) {
-		for(i=1;i<n;i++) {
-			if(tmp==NULL) {
+	tmp = (f == 1 ? top : bottom);
+
+	if (f == 1) {
+		for (i = 1; i < n; i++) {
+			if (tmp == NULL) {
 				yyerror("Number of elements in the stack is less than the required number");
 				break;
 			}
-			tmp=tmp->down;
+
+			tmp = tmp->down;
 		}
 	}
-	for(i=0;i<n;i++) {
-		if(tmp==NULL) {
-			flag=1;
+
+	for (i = 0; i < n; i++) {
+		if (tmp == NULL) {
+			flag = 1;
 			break;
 		}
-		if(a==1)
-			printf("%d",tmp->v);
-		else
-			printf("%c",tmp->v);
-		tmp=tmp->up;
+
+		if(a == 1) {
+			printf("%d", tmp->v);
+		} else {
+			printf("%c", tmp->v);
+		}
+
+		tmp = tmp->up;
 	}
-	if(flag==1)
+
+	if (flag == 1) {
 		yyerror("Number of elements in the stack is less than the required number");
+	}
+
 	return;
 }
 
@@ -452,15 +537,19 @@ void reverse_whole(void) {
 	gmem top2, bottom2, tmp, buf;
 	top2 = bottom;
 	bottom2 = top;
+
 	bottom2->up = top->down;
 	bottom2->down = NULL;
+
 	tmp = bottom2->up;
-	while(tmp != NULL) {
+
+	while (tmp != NULL) {
 		buf = tmp->down;
 		tmp->down = tmp->up;
 		tmp->up = buf;
 		tmp = buf;
 	}
+
 	top = top2;
 	bottom = bottom2;
 	return;
@@ -474,12 +563,15 @@ void reverse_whole(void) {
 void reverse_stack_n(int f, int n) {
 	int i;
 	gmem tmp, buf, tmp2;
-	tmp = (f==1)?top:bottom;
+	tmp = (f == 1 ? top : bottom);
 	tmp2 = tmp;
-	for(i=0; i<n-1; i++) {
-		if(tmp == NULL)
+
+	for (i = 0; i < n-1; i++) {
+		if (tmp == NULL) {
 			break;
-		if(f == 1) {
+		}
+
+		if (f == 1) {
 			buf = tmp->down;
 			tmp->down = tmp->up;
 			tmp->up = buf;
@@ -488,10 +580,12 @@ void reverse_stack_n(int f, int n) {
 			tmp->up = tmp->down;
 			tmp->down = buf;
 		}
+
 		tmp = buf;
 	}
-	if(tmp != NULL) {
-		if(f == 1) {
+
+	if (tmp != NULL) {
+		if (f == 1) {
 			tmp->down->up = tmp2;
 			tmp2->down = tmp->down;
 			tmp->down = tmp->up;
@@ -505,6 +599,7 @@ void reverse_stack_n(int f, int n) {
 			bottom = tmp;
 		}
 	}
+
 	return;
 }
 
@@ -513,13 +608,15 @@ void reverse_stack_n(int f, int n) {
  */
 void move_top(void) {
 	gmem tmp, buf;
-	tmp=top;
-	buf=top;
-	while(tmp!=NULL) {
-		buf=tmp;
-		tmp=tmp->up;
+	tmp = top;
+	buf = top;
+
+	while (tmp != NULL) {
+		buf = tmp;
+		tmp = tmp->up;
 	}
-	top=buf;
+
+	top = buf;
 	return;
 }
 
@@ -529,12 +626,15 @@ void move_top(void) {
  */
 void move(int f, int n) {
 	int i;
-	for(i=0;i<n;i++) {
-		if(top!=NULL)
-			top=(f==1)?top->down:top->up;
-		else
+
+	for (i = 0; i < n; i++) {
+		if (top != NULL) {
+			top = (f == 1 ? top->down : top->up);
+		} else {
 			yyerror("Number of elements in the stack is less than the required number");
+		}
 	}
+
 	return;
 }
 
@@ -547,19 +647,28 @@ void read_n(int f, int n) {
 	int i;
 	char in;
 	gmem tmp;
-	if(top==NULL)
+
+	if(top == NULL) {
 		push_number_into_stack(32);
-	tmp=(f==1)?top:bottom;
-	for(i=1;i<n;i++) {
-		if(tmp==NULL)
-			break;
-		tmp=(f==1)?tmp->down:tmp->up;
 	}
-	if(tmp!=NULL) {
-		scanf("%c",&in);
+
+	tmp = (f == 1 ? top : bottom);
+
+	for(i = 1; i < n; i++) {
+		if(tmp == NULL) {
+			break;
+		}
+
+		tmp = (f == 1 ? tmp->down : tmp->up);
+	}
+
+	if (tmp != NULL) {
+		scanf("%c", &in);
 		tmp->v = (int)in;
-	} else
+	} else {
 		yyerror("Number of elements in the stack is less than the required number");
+	}
+
 	return;
 }
 
@@ -567,7 +676,7 @@ void read_n(int f, int n) {
  * CCA -- Read input to n given by top item of stack
  */
 void read_top(void) {
-	read_n(1,top->v+1);
+	read_n(1, top->v + 1);
 	return;
 }
 
@@ -702,6 +811,7 @@ void execute_instr(void) {
 			default:
 				break;
 		}
+
 		if (buf->after == NULL) {
 			break;
 		} else {
@@ -717,6 +827,7 @@ void execute(void) {
 	execute_instr();
 	clear_instr();
 	clear_stack();
+
 	return;
 }
 
@@ -724,20 +835,24 @@ void execute(void) {
  * Main top level function for genome
  */
 int main(int argc, char**argv) {
-	if(argc!=2) {
-		printf("Usage: %s <filename>\n",argv[0]);
+	if(argc != 2) {
+		printf("Usage: %s <filename>\n", argv[0]);
 		return 1;
 	}
-	yyin=NULL;
-	yyin=fopen(argv[1],"r");
-	if(yyin==NULL) {
-		printf("%s: %s: No such file or directory\n",argv[0],argv[1]);
+
+	yyin = NULL;
+	yyin = fopen(argv[1], "r");
+
+	if (yyin == NULL) {
+		printf("%s: %s: No such file or directory\n", argv[0], argv[1]);
 		return 1;
 	} else {
 		yyparse();
 		execute();
 	}
+
 	fclose(yyin);
 	printf("\n");
+
 	return 0;
 }

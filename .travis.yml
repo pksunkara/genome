@@ -3,6 +3,4 @@ branches:
   only:
     - master
 notifications:
-  irc: "irc.freenode.net#pksunkara"
-  email:
-    on_success: never
+  email: false
